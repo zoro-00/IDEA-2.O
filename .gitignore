@@ -1,0 +1,17 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Local env files
+.env*.local
+
+# Node/Next.js dependencies and build output
+node_modules/
+.next/
+dist/
+build/
+out/
