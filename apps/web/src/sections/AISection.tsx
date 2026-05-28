@@ -1,269 +1,162 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-import { MessageSquare, Send, Sparkles, Code, User } from "lucide-react";
-import { AI_INVESTIGATION_MESSAGES } from "@/lib/constants";
-
-function TypingEffect({ text, delay = 0 }: { text: string; delay?: number }) {
-  const [displayed, setDisplayed] = useState("");
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  useEffect(() => {
-    if (!started) return;
-    let i = 0;
-    const interval = setInterval(() => {
-      setDisplayed(text.slice(0, i + 1));
-      i++;
-      if (i >= text.length) clearInterval(interval);
-    }, 8);
-    return () => clearInterval(interval);
-  }, [started, text]);
-
-  return <span>{displayed}</span>;
-}
-
-function ChatMessage({
-  role,
-  content,
-  delay,
-}: {
-  role: "user" | "assistant";
-  content: string;
-  delay: number;
-}) {
-  const isUser = role === "user";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      viewport={{ once: true }}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}
-    >
-      <div
-        className={`flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center ${
-          isUser
-            ? "bg-[#3B82F6]/20"
-            : "bg-gradient-to-br from-[#A855F7]/20 to-[#00F5FF]/20"
-        }`}
-      >
-        {isUser ? (
-          <User className="w-4 h-4 text-[#3B82F6]" />
-        ) : (
-          <Sparkles className="w-4 h-4 text-[#A855F7]" />
-        )}
-      </div>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          isUser
-            ? "bg-[#3B82F6]/10 border border-[#3B82F6]/20"
-            : "glass"
-        }`}
-      >
-        <div className="text-sm text-[#E2E8F0] whitespace-pre-wrap leading-relaxed">
-          {content.split("\n").map((line, i) => {
-            // Handle code blocks
-            if (line.startsWith("```")) {
-              return null;
-            }
-            // Bold text
-            const parts = line.split(/(\*\*.*?\*\*)/g);
-            return (
-              <div key={i} className={line.startsWith("-") || line.startsWith("▪") ? "ml-4" : ""}>
-                {parts.map((part, j) => {
-                  if (part.startsWith("**") && part.endsWith("**")) {
-                    return (
-                      <span key={j} className="font-semibold text-white">
-                        {part.slice(2, -2)}
-                      </span>
-                    );
-                  }
-                  // Inline code
-                  if (part.includes("`")) {
-                    const codeParts = part.split(/(`[^`]+`)/g);
-                    return codeParts.map((cp, k) => {
-                      if (cp.startsWith("`") && cp.endsWith("`")) {
-                        return (
-                          <code
-                            key={k}
-                            className="px-1.5 py-0.5 rounded bg-[#A855F7]/10 text-[#A855F7] font-mono text-xs"
-                          >
-                            {cp.slice(1, -1)}
-                          </code>
-                        );
-                      }
-                      return <span key={k}>{cp}</span>;
-                    });
-                  }
-                  return <span key={j}>{part}</span>;
-                })}
-              </div>
-            );
-          })}
-          {/* Render code block if present */}
-          {content.includes("```cypher") && (
-            <div className="mt-3 rounded-xl bg-[#0F172A] border border-white/5 overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5">
-                <Code className="w-3 h-3 text-[#00F5FF]" />
-                <span className="text-[10px] font-mono text-[#94A3B8]">CYPHER</span>
-              </div>
-              <pre className="p-4 text-xs font-mono text-[#06B6D4] overflow-x-auto">
-                {content.match(/```cypher\n([\s\S]*?)```/)?.[1] || ""}
-              </pre>
-            </div>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function SARPreview() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      className="glass rounded-2xl p-6 h-full"
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#FFD166]" />
-          <span className="text-xs font-mono text-[#FFD166] tracking-wider">
-            AUTO-GENERATED SAR
-          </span>
-        </div>
-        <span className="text-[10px] font-mono text-[#94A3B8]">DRAFT</span>
-      </div>
-
-      <div className="space-y-4 text-sm">
-        <div>
-          <div className="text-[10px] font-mono text-[#94A3B8] mb-1">SUBJECT</div>
-          <div className="text-white font-medium">
-            J. Morrison (ACC-4521) — Circular Transaction Ring
-          </div>
-        </div>
-
-        <div>
-          <div className="text-[10px] font-mono text-[#94A3B8] mb-1">
-            SUSPICIOUS ACTIVITY NARRATIVE
-          </div>
-          <div className="text-[#E2E8F0] text-xs leading-relaxed glass rounded-xl p-3">
-            Between March 15-17, 2024, Account ACC-4521 (J. Morrison) participated
-            in a circular transaction pattern involving four accounts. Total funds
-            moved: $487,200 across 23 wire transfers. The pattern shows characteristics
-            consistent with round-tripping and layering:
-            <br /><br />
-            1. ACC-4521 → ACC-7833 ($9,500 × 6 transfers — below CTR threshold)
-            <br />
-            2. ACC-7833 → ACC-9877 ($47,000 — single wire)
-            <br />
-            3. ACC-9877 → ACC-5590 ($45,500 — international wire)
-            <br />
-            4. ACC-5590 → ACC-4521 ($44,000 — completing the cycle)
-            <br /><br />
-            Account ACC-4521 was dormant for 11 months prior to reactivation.
-            Community detection (Louvain) identified all four accounts in the same
-            transaction cluster. GraphSAGE classification: P(suspicious) = 0.91.
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="px-3 py-1.5 rounded-xl bg-[#FF3B3B]/10 text-[#FF3B3B] text-xs font-mono">
-            Risk: 87/100
-          </div>
-          <div className="px-3 py-1.5 rounded-xl bg-[#A855F7]/10 text-[#A855F7] text-xs font-mono">
-            GNN: 0.91
-          </div>
-          <div className="px-3 py-1.5 rounded-xl bg-[#FFD166]/10 text-[#FFD166] text-xs font-mono">
-            4 Entities
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { AICopilot } from "@/features/investigation/AICopilot";
+import { useInvestigationStore } from "@/store/useInvestigationStore";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { FADE_IN, FADE_UP, STAGGER_CONTAINER, STAGGER_ITEM_UP } from "@/animations/variants";
+import { Bot, FileText, CheckCircle2, AlertTriangle, ShieldCheck } from "lucide-react";
 
 export default function AISection() {
+  const { activeSarDraft, isGeneratingSar } = useInvestigationStore();
+  const { ref, isInView } = useScrollReveal();
+
   return (
-    <section id="ai-copilot" className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-[#030712] to-[#020617]" />
+    <section id="ai-copilot" className="relative py-32 bg-[#020617] border-t border-white/5 overflow-hidden">
+      {/* Background Orbs */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#A855F7] rounded-full blur-[150px] opacity-10 pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-[#3B82F6] rounded-full blur-[120px] opacity-10 pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="container mx-auto px-6 lg:px-12 relative z-10" ref={ref}>
+        <SectionHeader
+          badgeIcon={Bot}
+          badgeText="INVESTIGATION COPILOT"
+          badgeColor="#A855F7"
+          title1="Conversational"
+          title2="Intelligence."
+          description="Investigate complex networks, translate natural language to Cypher graph queries, and automatically generate Suspicious Activity Reports (SAR) in seconds."
+        />
+
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          variants={STAGGER_CONTAINER}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-16"
         >
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
-            <Sparkles className="w-3 h-3 text-[#A855F7]" />
-            <span className="text-xs font-mono text-[#A855F7] tracking-wider">
-              AI INVESTIGATION COPILOT
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-white">Investigate with </span>
-            <span className="gradient-text">Intelligence</span>
-          </h2>
-          <p className="text-lg text-[#94A3B8] max-w-2xl mx-auto">
-            Natural language investigation. Ask questions, generate Cypher queries,
-            and auto-generate regulatory-ready SAR narratives — all powered by AI
-            with full graph context.
-          </p>
+          {/* Left Column: AI Copilot Chat */}
+          <motion.div variants={STAGGER_ITEM_UP} className="lg:col-span-7 h-[700px]">
+            <AICopilot />
+          </motion.div>
+
+          {/* Right Column: SAR Generation & Workspace */}
+          <motion.div variants={STAGGER_ITEM_UP} className="lg:col-span-5 flex flex-col gap-6">
+            
+            {/* Context Panel */}
+            <GlassCard intensity="light" className="p-6 border-white/5 border-l-2 border-l-[#A855F7]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-[#A855F7]/10 rounded border border-[#A855F7]/20">
+                  <AlertTriangle className="w-4 h-4 text-[#A855F7]" />
+                </div>
+                <h3 className="text-white font-bold">Active Context</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-[#94A3B8]">Primary Entity:</span>
+                  <span className="font-mono text-[#00F5FF]">ACC-4521</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-[#94A3B8]">Pattern:</span>
+                  <span className="text-white">Circular Laundering</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-[#94A3B8]">Graph Hops:</span>
+                  <span className="text-white">4 Degrees</span>
+                </div>
+                <div className="w-full h-px bg-white/5 my-2" />
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-[#94A3B8]">ML Risk Score:</span>
+                  <span className="font-mono font-bold text-[#F43F5E]">94/100 (CRITICAL)</span>
+                </div>
+              </div>
+            </GlassCard>
+
+            {/* SAR Generator Panel */}
+            <GlassCard intensity="cyber" className="flex-1 p-6 relative overflow-hidden group">
+              {/* Animated scanline */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#A855F7]/10 to-transparent h-1/3 -translate-y-full group-hover:animate-scanline opacity-0 group-hover:opacity-100 pointer-events-none" />
+              
+              <div className="flex items-center gap-3 mb-6 relative z-10">
+                <div className="p-2 bg-[#10B981]/10 rounded border border-[#10B981]/20">
+                  <FileText className="w-4 h-4 text-[#10B981]" />
+                </div>
+                <h3 className="text-white font-bold">Auto-SAR Generator</h3>
+              </div>
+
+              <div className="relative h-full min-h-[300px]">
+                <AnimatePresence mode="wait">
+                  {isGeneratingSar ? (
+                    <motion.div
+                      key="generating"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center text-center"
+                    >
+                      <div className="w-12 h-12 relative mb-4">
+                        <div className="absolute inset-0 border-2 border-[#A855F7]/20 rounded-full" />
+                        <div className="absolute inset-0 border-2 border-[#A855F7] rounded-full border-t-transparent animate-spin" />
+                        <Bot className="absolute inset-0 m-auto w-5 h-5 text-[#A855F7] animate-pulse" />
+                      </div>
+                      <h4 className="text-[#E2E8F0] font-bold mb-2">Synthesizing Report</h4>
+                      <p className="text-[#94A3B8] text-sm font-mono max-w-[250px]">
+                        Compiling graph trajectories, ML scores, and transaction history...
+                      </p>
+                    </motion.div>
+                  ) : activeSarDraft ? (
+                    <motion.div
+                      key="draft"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute inset-0 flex flex-col"
+                    >
+                      <div className="flex items-center gap-2 mb-4 text-[#10B981] text-xs font-mono bg-[#10B981]/10 px-3 py-1.5 rounded w-fit border border-[#10B981]/20">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        DRAFT GENERATED
+                      </div>
+                      <div className="bg-[#030712] border border-white/10 rounded-lg p-4 flex-1 overflow-y-auto scrollbar-hide text-sm">
+                        <div className="font-mono text-[#00F5FF] mb-3 text-xs">
+                          REPORT_ID: {activeSarDraft.id}<br/>
+                          TIMESTAMP: {activeSarDraft.createdAt}
+                        </div>
+                        <h4 className="font-bold text-white mb-2">{activeSarDraft.subject}</h4>
+                        <div className="space-y-4 text-[#94A3B8] leading-relaxed">
+                          {activeSarDraft.narrative.split('\n\n').map((para, i) => (
+                            <p key={i}>{para}</p>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-4 flex gap-3">
+                        <button className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg py-2.5 text-sm font-medium transition-colors">
+                          Edit Draft
+                        </button>
+                        <button className="flex-1 bg-[#A855F7]/20 hover:bg-[#A855F7]/30 text-[#A855F7] border border-[#A855F7]/30 rounded-lg py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                          <ShieldCheck className="w-4 h-4" />
+                          File to FinCEN
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="empty"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center text-center opacity-50"
+                    >
+                      <FileText className="w-12 h-12 text-[#475569] mb-4" />
+                      <p className="text-[#94A3B8] text-sm">
+                        Ask the Copilot to generate a SAR draft based on the current investigation context.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </GlassCard>
+            
+          </motion.div>
         </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Chat Interface */}
-          <div className="glass rounded-2xl p-6 overflow-hidden">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-[#00F5FF]" />
-                <span className="text-xs font-mono text-[#00F5FF] tracking-wider">
-                  AI ASSISTANT
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-[#06D6A0]" />
-                <span className="text-[10px] font-mono text-[#94A3B8]">ONLINE</span>
-              </div>
-            </div>
-
-            <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-              {AI_INVESTIGATION_MESSAGES.map((msg, i) => (
-                <ChatMessage
-                  key={i}
-                  role={msg.role}
-                  content={msg.content}
-                  delay={i * 0.3}
-                />
-              ))}
-            </div>
-
-            {/* Input */}
-            <div className="mt-4 flex items-center gap-2 glass rounded-xl p-2">
-              <input
-                type="text"
-                placeholder="Ask about any entity, pattern, or risk..."
-                className="flex-1 bg-transparent text-sm text-white placeholder:text-[#94A3B8]/50 px-3 py-2 outline-none font-mono"
-                readOnly
-              />
-              <button className="p-2 rounded-lg bg-gradient-to-r from-[#A855F7] to-[#3B82F6] hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-shadow">
-                <Send className="w-4 h-4 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* SAR Preview */}
-          <SARPreview />
-        </div>
       </div>
     </section>
   );

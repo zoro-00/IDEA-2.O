@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/sections/HeroSection";
 import IntelligenceSection from "@/sections/IntelligenceSection";
 import GraphSection from "@/sections/GraphSection";
+import IsolationForestSection from "@/sections/IsolationForestSection";
 import AISection from "@/sections/AISection";
 import ArchitectureSection from "@/sections/ArchitectureSection";
 import FeaturesSection from "@/sections/FeaturesSection";
@@ -17,6 +18,7 @@ export default function Home() {
       <HeroSection />
       <IntelligenceSection />
       <GraphSection />
+      <IsolationForestSection />
       <AISection />
       <ArchitectureSection />
       <FeaturesSection />
