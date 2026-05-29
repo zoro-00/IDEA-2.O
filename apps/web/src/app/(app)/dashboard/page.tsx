@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { MetricCard } from "@/components/ui/MetricCard";
@@ -8,14 +8,24 @@ import { RiskRadar } from "@/components/charts/RiskRadar";
 import { STAGGER_CONTAINER, STAGGER_ITEM_UP } from "@/animations/variants";
 import { useAMLStore } from "@/store/useAMLStore";
 import { useWebSocketSim } from "@/hooks/useWebSocketSim";
+import { starApi } from "@/lib/api";
 import { Activity, ShieldAlert, Crosshair, Network, BarChart2 } from "lucide-react";
 import { formatCurrency, getRiskColor } from "@/utils/format";
 
 export default function DashboardPage() {
   const { alerts, transactions } = useAMLStore();
+  const [healthData, setHealthData] = useState<any>(null);
   
   // Start websocket simulation when on dashboard
   useWebSocketSim();
+
+  useEffect(() => {
+    starApi.getHealth().then(setHealthData).catch(console.error);
+    const interval = setInterval(() => {
+      starApi.getHealth().then(setHealthData).catch(console.error);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const mockVolumeData = [
     { time: "00:00", volume: 1200, anomaly: 0 },
@@ -131,50 +141,45 @@ export default function DashboardPage() {
         {/* Right Sidebar: Quick Actions & Status */}
         <motion.div variants={STAGGER_ITEM_UP} className="col-span-1 flex flex-col gap-4 mt-4">
           <GlassCard className="p-5 flex-1 border-l-2 border-l-[#10B981]">
-            <h3 className="font-bold text-white text-sm mb-4">System Status</h3>
+            <h3 className="font-bold text-white text-sm mb-4 flex items-center justify-between">
+              System Status
+              {healthData && (
+                <span className={`text-[10px] px-2 py-0.5 rounded font-mono ${
+                  healthData.overall === 'healthy' ? 'bg-[#10B981]/20 text-[#10B981]' : 
+                  healthData.overall === 'degraded' ? 'bg-[#FACC15]/20 text-[#FACC15]' : 'bg-[#F43F5E]/20 text-[#F43F5E]'
+                }`}>
+                  {healthData.overall.toUpperCase()}
+                </span>
+              )}
+            </h3>
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-[#94A3B8]">Isolation Forest Pipeline</span>
-                  <span className="text-[#10B981] font-mono tracking-widest">ONLINE</span>
+              {healthData ? healthData.services.map((svc: any) => (
+                <div key={svc.name}>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-[#94A3B8]">{svc.name}</span>
+                    <span className={`font-mono tracking-widest ${
+                      svc.status === 'online' ? 'text-[#10B981]' : 
+                      svc.status === 'degraded' ? 'text-[#FACC15]' : 'text-[#F43F5E]'
+                    }`}>
+                      {svc.status.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: svc.status === 'online' ? "100%" : svc.status === 'degraded' ? "50%" : "0%" }}
+                      transition={{ duration: 1 }}
+                      className={`h-full ${
+                        svc.status === 'online' ? 'bg-[#10B981]' : 
+                        svc.status === 'degraded' ? 'bg-[#FACC15]' : 'bg-[#F43F5E]'
+                      }`}
+                    />
+                  </div>
+                  {svc.details && <div className="text-[9px] text-[#475569] mt-1">{svc.details}</div>}
                 </div>
-                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 1 }}
-                    className="h-full bg-[#10B981]" 
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-[#94A3B8]">GraphSAGE Engine</span>
-                  <span className="text-[#10B981] font-mono tracking-widest">ONLINE</span>
-                </div>
-                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 1.2 }}
-                    className="h-full bg-[#10B981]" 
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-[#94A3B8]">Data Ingestion Load</span>
-                  <span className="text-[#FACC15] font-mono">78%</span>
-                </div>
-                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: "78%" }}
-                    transition={{ duration: 1.5 }}
-                    className="h-full bg-[#FACC15]" 
-                  />
-                </div>
-              </div>
+              )) : (
+                <div className="text-sm text-[#94A3B8]">Loading system status...</div>
+              )}
             </div>
 
             <h3 className="font-bold text-white text-sm mt-10 mb-4">Command Actions</h3>

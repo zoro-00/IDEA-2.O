@@ -1,0 +1,13 @@
+{
+  "verification_status": "pending_runtime_verification",
+  "tensor_shapes": {
+    "x": [0, 0],
+    "edge_index": [0, 0],
+    "edge_attr": [0, 0],
+    "y": [0]
+  },
+  "prediction_probabilities": [],
+  "predictions": [],
+  "suspicious_edges": [],
+  "attention_layers": 0
+}

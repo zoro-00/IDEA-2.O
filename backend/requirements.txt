@@ -1,0 +1,61 @@
+# ============================================================
+# STAR Backend — requirements.txt
+# Install with: uv pip install -r requirements.txt
+# ============================================================
+
+# ── Web Framework ─────────────────────────────────────────────
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+websockets>=12.0
+starlette>=0.40
+
+# ── Config & Environment ──────────────────────────────────────
+pydantic>=2.0
+pydantic-settings>=2.0
+python-dotenv>=1.0
+
+# ── Machine Learning — Isolation Forest ───────────────────────
+scikit-learn>=1.4
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+joblib>=1.3
+
+# ── LangChain + Google Gemini ─────────────────────────────────
+langchain>=0.2
+langchain-core>=0.2
+langchain-google-genai>=1.0
+google-generativeai>=0.7
+google-ai-generativelanguage>=0.6
+
+# ── Graph Database ────────────────────────────────────────────
+neo4j>=5.0
+networkx>=3.2
+
+# ── HTTP Client ───────────────────────────────────────────────
+httpx>=0.27
+requests>=2.31
+
+# ── Async / Utilities ─────────────────────────────────────────
+anyio>=4.0
+python-jose[cryptography]>=3.3
+tenacity>=8.2
+
+# ── PyTorch + PyTorch Geometric ───────────────────────────────
+# NOTE: Install these SEPARATELY with the commands below.
+# PyG requires matching torch version and special index URL.
+#
+# CPU Install:
+#   uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   uv pip install torch-geometric torch-scatter torch-sparse --find-links https://data.pyg.org/whl/torch-2.5.0+cpu.html
+#
+# GPU Install (CUDA 12.1):
+#   uv pip install torch --index-url https://download.pytorch.org/whl/cu121
+#   uv pip install torch-geometric torch-scatter torch-sparse --find-links https://data.pyg.org/whl/torch-2.5.0+cu121.html
+#
+# After installing torch, uncomment and run:
+# torch>=2.2
+# torch-geometric>=2.5
+# torch-scatter
+# torch-sparse

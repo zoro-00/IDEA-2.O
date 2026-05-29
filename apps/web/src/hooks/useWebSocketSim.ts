@@ -1,11 +1,15 @@
 // ============================================================
 // STAR — useWebSocketSim Hook
-// Simulates a streaming WebSocket connection for AML data
+// Real-time connection to STAR backend WebSocket.
+// Falls back to mock simulation when backend is unreachable.
 // ============================================================
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAMLStore } from "@/store/useAMLStore";
 import { WEBSOCKET_INTERVAL_MS } from "@/constants";
-import type { Transaction } from "@/types";
+import type { AMLAlert, Transaction } from "@/types";
+
+const BACKEND_WS_URL = "ws://localhost:8000/ws/stream";
+const RECONNECT_INTERVAL_MS = 5000;
 
 const generateRandomTransaction = (): Transaction => {
   const isSuspicious = Math.random() > 0.85;
@@ -31,26 +35,120 @@ const generateRandomTransaction = (): Transaction => {
 export function useWebSocketSim() {
   const isStreaming = useAMLStore((state) => state.isStreaming);
   const addTransaction = useAMLStore((state) => state.addTransaction);
+  const addAlert = useAMLStore((state) => state.addAlert);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const [backendConnected, setBackendConnected] = useState(false);
 
+  // ── Attempt real backend WebSocket connection ──────────────
   useEffect(() => {
-    if (!isStreaming) {
+    if (!isStreaming) return;
+
+    let reconnectTimer: NodeJS.Timeout | null = null;
+
+    const connectWS = () => {
+      try {
+        const ws = new WebSocket(BACKEND_WS_URL);
+        wsRef.current = ws;
+
+        ws.onopen = () => {
+          setBackendConnected(true);
+          console.log("[STAR] Connected to real backend WebSocket");
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+
+            if (msg.type === "transaction" && msg.data) {
+              const d = msg.data;
+              addTransaction({
+                id: d.id,
+                from: d.from,
+                to: d.to,
+                amount: d.amount,
+                currency: d.currency || "USD",
+                timestamp: d.timestamp || new Date().toLocaleTimeString(),
+                type: "wire",
+                channel: "SWIFT",
+                risk: d.risk || "low",
+                anomalyScore: d.anomalyScore || 0,
+                flags: d.flags || [],
+                jurisdiction: d.jurisdiction || "US",
+              });
+            }
+
+            if (msg.type === "alert" && msg.data) {
+              const d = msg.data;
+              addAlert({
+                id: d.id || `ALT-${Date.now()}`,
+                type: d.type || "gnn_flagged",
+                severity: d.severity || "medium",
+                score: d.score || 0,
+                entities: d.entities || [],
+                entityCount: d.entityCount || 0,
+                amount: d.amount || "$0.00",
+                amountRaw: d.amountRaw || 0,
+                time: d.time || new Date().toLocaleTimeString(),
+                timestamp: d.timestamp || Date.now(),
+                description: d.description || "",
+                status: "open",
+                tags: d.tags || [],
+                relatedTransactions: d.relatedTransactions || [],
+              });
+            }
+          } catch (e) {
+            console.warn("[STAR WS] Parse error", e);
+          }
+        };
+
+        ws.onclose = () => {
+          setBackendConnected(false);
+          console.log("[STAR] Backend WS closed — falling back to mock");
+          // Schedule reconnect
+          reconnectTimer = setTimeout(connectWS, RECONNECT_INTERVAL_MS);
+        };
+
+        ws.onerror = () => {
+          setBackendConnected(false);
+          ws.close();
+        };
+      } catch {
+        setBackendConnected(false);
+      }
+    };
+
+    connectWS();
+
+    return () => {
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      if (wsRef.current) {
+        wsRef.current.onclose = null;
+        wsRef.current.close();
+      }
+    };
+  }, [isStreaming, addTransaction, addAlert]);
+
+  // ── Mock fallback when backend not connected ───────────────
+  useEffect(() => {
+    if (!isStreaming || backendConnected) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
 
     timerRef.current = setInterval(() => {
-      // Add 1-3 random transactions to simulate bursty WebSocket traffic
       const count = Math.floor(Math.random() * 3) + 1;
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
           addTransaction(generateRandomTransaction());
-        }, Math.random() * 800); // Random offset within the interval
+        }, Math.random() * 800);
       }
     }, WEBSOCKET_INTERVAL_MS);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isStreaming, addTransaction]);
+  }, [isStreaming, backendConnected, addTransaction]);
+
+  return { backendConnected };
 }

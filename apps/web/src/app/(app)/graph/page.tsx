@@ -1,17 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ForceGraphWrapper } from "@/components/graph/ForceGraphWrapper";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { MOCK_GRAPH_NODES, MOCK_GRAPH_EDGES } from "@/data";
-import { Search, Filter, ZoomIn, ZoomOut, Maximize, Share2 } from "lucide-react";
-import type { GraphNode } from "@/types";
+import { starApi } from "@/lib/api";
+import { Search, Filter, ZoomIn, ZoomOut, Maximize, Share2, Loader2 } from "lucide-react";
+import type { GraphNode, GraphEdge } from "@/types";
 
 export default function GraphPage() {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [highlightNodes, setHighlightNodes] = useState<Set<string>>(new Set());
   const [highlightLinks, setHighlightLinks] = useState<Set<string>>(new Set());
+  
+  const [nodes, setNodes] = useState<GraphNode[]>([]);
+  const [edges, setEdges] = useState<GraphEdge[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    starApi.getFullGraph()
+      .then(data => {
+        const mappedNodes: GraphNode[] = data.nodes.map(n => ({
+          ...n,
+          anomalyScore: n.anomaly_score,
+          riskLevel: n.risk_level,
+          community: String(n.community)
+        })) as unknown as GraphNode[];
+        setNodes(mappedNodes);
+        setEdges(data.links as unknown as GraphEdge[]);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleNodeClick = (node: GraphNode) => {
     setSelectedNode(node);
@@ -22,7 +42,7 @@ export default function GraphPage() {
     
     newHighlightNodes.add(node.id);
     
-    MOCK_GRAPH_EDGES.forEach(edge => {
+    edges.forEach(edge => {
       const sourceId = typeof edge.source === 'object' ? (edge.source as any).id : edge.source;
       const targetId = typeof edge.target === 'object' ? (edge.target as any).id : edge.target;
       
@@ -48,13 +68,19 @@ export default function GraphPage() {
       
       {/* Main Graph Area */}
       <div className="flex-1 relative cursor-crosshair" onClick={() => selectedNode && clearSelection()}>
-        <ForceGraphWrapper 
-          nodes={MOCK_GRAPH_NODES} 
-          edges={MOCK_GRAPH_EDGES} 
-          onNodeClick={handleNodeClick}
-          highlightNodes={highlightNodes}
-          highlightLinks={highlightLinks}
-        />
+        {loading ? (
+          <div className="absolute inset-0 flex items-center justify-center text-[#94A3B8]">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+        ) : (
+          <ForceGraphWrapper 
+            nodes={nodes} 
+            edges={edges} 
+            onNodeClick={handleNodeClick}
+            highlightNodes={highlightNodes}
+            highlightLinks={highlightLinks}
+          />
+        )}
         
         {/* Floating Controls */}
         <div className="absolute top-6 left-6 flex flex-col gap-2 z-10">

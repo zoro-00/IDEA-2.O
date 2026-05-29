@@ -1,15 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useAMLStore } from "@/store/useAMLStore";
+import { starApi } from "@/lib/api";
 import { ShieldAlert, Filter, ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { formatCurrency, getRiskColor, getRiskBgColor } from "@/utils/format";
 import { STAGGER_CONTAINER, STAGGER_ITEM_UP } from "@/animations/variants";
 import { RiskBadge } from "@/components/ui/RiskBadge";
 
 export default function AlertsPage() {
-  const { alerts } = useAMLStore();
+  const { alerts, setAlerts } = useAMLStore();
+
+  useEffect(() => {
+    starApi.getAlerts().then(data => setAlerts(data as any)).catch(console.error);
+  }, [setAlerts]);
 
   return (
     <div className="p-6 lg:p-10 max-w-[1600px] mx-auto min-h-[calc(100vh-64px)]">
