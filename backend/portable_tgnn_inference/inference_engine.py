@@ -45,7 +45,7 @@ class TGNNInferenceEngine:
         if self.model is not None:
             return self.model
 
-        checkpoint = torch.load(self.checkpoint_path, map_location=self.device)
+        checkpoint = torch.load(self.checkpoint_path, map_location=self.device, weights_only=False)
         config = self._infer_model_config(checkpoint)
         self.model_config = config
         model = GATe(

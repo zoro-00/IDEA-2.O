@@ -33,44 +33,65 @@ class Neo4jService:
         self._edge_meta: Dict[Tuple, Dict] = {}  # (src, dst, tx_id) → metadata
 
     def connect(self) -> None:
-        """Try Neo4j; fall back to in-memory graph on failure."""
-        # Try connecting with retries and exponential backoff
+        """Try Neo4j (Aura-compatible); fall back to in-memory graph on failure."""
         max_attempts = getattr(settings, "NEO4J_RETRY_ATTEMPTS", 3)
-        backoff_base = getattr(settings, "NEO4J_RETRY_BACKOFF", 2)
+        backoff_base = getattr(settings, "NEO4J_RETRY_BACKOFF", 1)
         last_exc = None
+
         for attempt in range(1, max_attempts + 1):
             try:
+                import time
                 from neo4j import GraphDatabase  # type: ignore
+
                 self._driver = GraphDatabase.driver(
                     settings.NEO4J_URI,
                     auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD),
                 )
-                self._driver.verify_connectivity()
+
+                # verify_connectivity() only checks the TCP+auth layer.
+                # We also run a lightweight Cypher to confirm database routing works.
+                # CRITICAL: do NOT pass database= here — Aura auto-selects home DB.
+                with self._driver.session() as session:
+                    session.run("RETURN 1").consume()
+
                 self._use_neo4j = True
-                logger.info("✅ Neo4j connected at %s (attempt %d)", settings.NEO4J_URI, attempt)
+                logger.info("✅ Neo4j connected and query verified at %s (attempt %d)",
+                            settings.NEO4J_URI, attempt)
                 self._ensure_constraints()
                 return
+
             except Exception as e:
                 last_exc = e
+                if self._driver:
+                    try:
+                        self._driver.close()
+                    except Exception:
+                        pass
+                    self._driver = None
                 logger.warning("Neo4j connect attempt %d/%d failed: %s", attempt, max_attempts, e)
                 if attempt < max_attempts:
-                    sleep_time = backoff_base ** attempt
+                    sleep_time = backoff_base * attempt
                     logger.info("Retrying Neo4j in %ds...", sleep_time)
-                    import time
-
                     time.sleep(sleep_time)
 
-        logger.warning("Neo4j not available after %d attempts (%s). Using in-memory NetworkX graph.", max_attempts, last_exc)
+        logger.warning(
+            "Neo4j not available after %d attempts (%s). Using in-memory NetworkX graph.",
+            max_attempts, last_exc
+        )
         self._use_neo4j = False
 
     def _ensure_constraints(self) -> None:
         """Create Neo4j indexes/constraints if not present."""
         if not self._use_neo4j:
             return
-        with self._driver.session(database=settings.NEO4J_DATABASE) as session:
-            session.run(
-                "CREATE CONSTRAINT IF NOT EXISTS FOR (a:Account) REQUIRE a.id IS UNIQUE"
-            )
+        try:
+            # No database= argument — Aura auto-routes to home database
+            with self._driver.session() as session:
+                session.run(
+                    "CREATE CONSTRAINT IF NOT EXISTS FOR (a:Account) REQUIRE a.id IS UNIQUE"
+                )
+        except Exception as e:
+            logger.warning("Could not create Neo4j constraints (non-fatal): %s", e)
 
     # ── Upsert ────────────────────────────────────────────────
 
@@ -143,7 +164,7 @@ class Neo4jService:
             r.suspicious = $suspicious,
             a.risk_score = CASE WHEN $risk > coalesce(a.risk_score, 0) THEN $risk ELSE a.risk_score END
         """
-        with self._driver.session(database=settings.NEO4J_DATABASE) as session:
+        with self._driver.session() as session:  # Aura: no database= arg
             session.run(cypher, from_id=from_id, to_id=to_id, tx_id=tx_id,
                         amount=amount, currency=currency, fmt=fmt,
                         ts=ts, risk=risk, suspicious=suspicious)
@@ -216,7 +237,7 @@ class Neo4jService:
         WITH collect(DISTINCT n) AS ns, collect(DISTINCT r) AS rs
         RETURN ns, rs
         """
-        with self._driver.session(database=settings.NEO4J_DATABASE) as session:
+        with self._driver.session() as session:  # Aura: no database= arg
             result = session.run(cypher, account_id=account_id)
             record = result.single()
             if not record:
@@ -281,7 +302,7 @@ class Neo4jService:
                reduce(total=0, r IN relationships(path) | total + r.amount) AS total_amount,
                length(path) AS hops
         """
-        with self._driver.session(database=settings.NEO4J_DATABASE) as session:
+        with self._driver.session() as session:  # Aura: no database= arg
             result = session.run(cypher, from_id=from_id, to_id=to_id)
             record = result.single()
             if not record:
