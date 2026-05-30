@@ -20,10 +20,12 @@ export default function DashboardPage() {
   useWebSocketSim();
 
   useEffect(() => {
-    starApi.getHealth().then(setHealthData).catch(console.error);
-    const interval = setInterval(() => {
-      starApi.getHealth().then(setHealthData).catch(console.error);
-    }, 10000);
+    const fetchHealth = () =>
+      starApi.getHealth().then(setHealthData).catch(() => {
+        // Silently keep stale data — backend may be reloading
+      });
+    fetchHealth();
+    const interval = setInterval(fetchHealth, 15000);
     return () => clearInterval(interval);
   }, []);
 

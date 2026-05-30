@@ -119,9 +119,21 @@ class CopilotService:
             _SESSION_MEMORY[session_id] = history[-MAX_HISTORY:]
 
             return content
+
         except Exception as e:
-            logger.error("Copilot query failed: %s", e)
-            return f"Investigation analysis unavailable: {e}"
+            err_str = str(e)
+            if "403" in err_str or "PERMISSION_DENIED" in err_str or "denied access" in err_str:
+                logger.warning(
+                    "Gemini API key access denied (403). "
+                    "Get a new key at https://aistudio.google.com/app/apikey and update GEMINI_API_KEY in .env"
+                )
+                return (
+                    "⚠️ Gemini API key has been revoked or access denied. "
+                    "Please get a new key from https://aistudio.google.com/app/apikey "
+                    "and update GEMINI_API_KEY in backend/.env, then restart the server."
+                )
+            logger.error("Copilot query failed: %s", err_str)
+            return f"Investigation analysis temporarily unavailable. Error: {err_str[:120]}"
 
     async def stream_query(
         self,
@@ -161,8 +173,16 @@ class CopilotService:
             _SESSION_MEMORY[session_id] = history[-MAX_HISTORY:]
 
         except Exception as e:
-            logger.error("Streaming copilot failed: %s", e)
-            yield f"Error: {e}"
+            err_str = str(e)
+            if "403" in err_str or "PERMISSION_DENIED" in err_str or "denied access" in err_str:
+                logger.warning("Gemini 403: API key revoked. Update GEMINI_API_KEY in .env")
+                yield (
+                    "⚠️ Gemini API key access denied. "
+                    "Get a new key from https://aistudio.google.com/app/apikey"
+                )
+            else:
+                logger.error("Streaming copilot failed: %s", err_str)
+                yield f"Error: {err_str[:120]}"
 
     async def generate_sar(
         self,

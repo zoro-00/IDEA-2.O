@@ -40,7 +40,12 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
+        "http://localhost:3002",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        # LAN access (Next.js dev server binds to all interfaces)
+        "http://192.168.1.34:3000",
+        "http://192.168.1.34:3001",
     ]
 
     # ── Pipeline Thresholds ──────────────────────────────────
