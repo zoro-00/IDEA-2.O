@@ -38,7 +38,8 @@ class ConnectionManager:
         ws = self._connections.get(client_id)
         if ws:
             try:
-                await ws.send_json(data)
+                # prevent slow clients from stalling the loop
+                await asyncio.wait_for(ws.send_json(data), timeout=5.0)
             except Exception as e:
                 logger.warning("Send to %s failed: %s", client_id, e)
                 self.disconnect(client_id)
@@ -50,7 +51,7 @@ class ConnectionManager:
         dead: Set[str] = set()
         for client_id, ws in list(self._connections.items()):
             try:
-                await ws.send_json(data)
+                await asyncio.wait_for(ws.send_json(data), timeout=5.0)
             except Exception as e:
                 logger.warning("Broadcast to %s failed: %s", client_id, e)
                 dead.add(client_id)

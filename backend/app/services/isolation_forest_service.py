@@ -59,11 +59,13 @@ class IsolationForestService:
         model_dir: Path = settings.IF_MODEL_DIR
 
         iso_path = model_dir / "isolation_forest.pkl"
-        scaler_path = model_dir / "scaler (1).pkl"
+        scaler_path = model_dir / "scaler.pkl"
         meta_path = model_dir / "model_metadata.pkl"
 
         if not iso_path.exists():
-            raise FileNotFoundError(f"Isolation Forest model not found at {iso_path}")
+            logger.warning("Isolation Forest model not found at %s — service will remain unloaded", iso_path)
+            self._loaded = False
+            return
 
         logger.info("Loading Isolation Forest model from %s", iso_path)
         import joblib, warnings
@@ -131,13 +133,14 @@ class IsolationForestService:
         return round(normalized, 2)
 
     def _get_risk_level(self, score: float) -> str:
-        if score < 30:
+        # Use centralized risk thresholds from config
+        if score < settings.RISK_THRESHOLD_NORMAL:
             return "normal"
-        if score < 45:
+        if score < settings.RISK_THRESHOLD_MONITORING:
             return "monitoring"
-        if score < 60:
+        if score < settings.RISK_THRESHOLD_MODERATE:
             return "moderate"
-        if score < 75:
+        if score < settings.RISK_THRESHOLD_HIGH:
             return "high"
         return "critical"
 

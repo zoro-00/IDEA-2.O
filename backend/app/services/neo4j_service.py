@@ -34,21 +34,34 @@ class Neo4jService:
 
     def connect(self) -> None:
         """Try Neo4j; fall back to in-memory graph on failure."""
-        try:
-            from neo4j import GraphDatabase  # type: ignore
-            self._driver = GraphDatabase.driver(
-                settings.NEO4J_URI,
-                auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD),
-            )
-            self._driver.verify_connectivity()
-            self._use_neo4j = True
-            logger.info("✅ Neo4j connected at %s", settings.NEO4J_URI)
-            self._ensure_constraints()
-        except Exception as e:
-            logger.warning(
-                "Neo4j not available (%s). Using in-memory NetworkX graph.", e
-            )
-            self._use_neo4j = False
+        # Try connecting with retries and exponential backoff
+        max_attempts = getattr(settings, "NEO4J_RETRY_ATTEMPTS", 3)
+        backoff_base = getattr(settings, "NEO4J_RETRY_BACKOFF", 2)
+        last_exc = None
+        for attempt in range(1, max_attempts + 1):
+            try:
+                from neo4j import GraphDatabase  # type: ignore
+                self._driver = GraphDatabase.driver(
+                    settings.NEO4J_URI,
+                    auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD),
+                )
+                self._driver.verify_connectivity()
+                self._use_neo4j = True
+                logger.info("✅ Neo4j connected at %s (attempt %d)", settings.NEO4J_URI, attempt)
+                self._ensure_constraints()
+                return
+            except Exception as e:
+                last_exc = e
+                logger.warning("Neo4j connect attempt %d/%d failed: %s", attempt, max_attempts, e)
+                if attempt < max_attempts:
+                    sleep_time = backoff_base ** attempt
+                    logger.info("Retrying Neo4j in %ds...", sleep_time)
+                    import time
+
+                    time.sleep(sleep_time)
+
+        logger.warning("Neo4j not available after %d attempts (%s). Using in-memory NetworkX graph.", max_attempts, last_exc)
+        self._use_neo4j = False
 
     def _ensure_constraints(self) -> None:
         """Create Neo4j indexes/constraints if not present."""
@@ -370,10 +383,15 @@ class Neo4jService:
 
     @staticmethod
     def _score_to_level(score: float) -> str:
-        if score < 30: return "normal"
-        if score < 45: return "monitoring"
-        if score < 60: return "moderate"
-        if score < 75: return "high"
+        # Use centralized risk thresholds from config
+        if score < settings.RISK_THRESHOLD_NORMAL:
+            return "normal"
+        if score < settings.RISK_THRESHOLD_MONITORING:
+            return "monitoring"
+        if score < settings.RISK_THRESHOLD_MODERATE:
+            return "moderate"
+        if score < settings.RISK_THRESHOLD_HIGH:
+            return "high"
         return "critical"
 
     @property
