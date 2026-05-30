@@ -8,7 +8,6 @@ import { useAMLStore } from "@/store/useAMLStore";
 import { WEBSOCKET_INTERVAL_MS } from "@/constants";
 import type { AMLAlert, Transaction } from "@/types";
 
-const BACKEND_WS_URL = "ws://localhost:8000/ws/stream";
 const RECONNECT_INTERVAL_MS = 5000;
 
 const generateRandomTransaction = (): Transaction => {
@@ -47,8 +46,13 @@ export function useWebSocketSim() {
     let reconnectTimer: NodeJS.Timeout | null = null;
 
     const connectWS = () => {
+      // Derive backend WS URL from NEXT_PUBLIC_API_URL or current origin
+      const base = (process.env.NEXT_PUBLIC_API_URL as string) || (typeof window !== 'undefined' && window.location?.origin) || 'http://localhost:8000';
+      const wsBase = base.replace(/^http/, "ws");
+      const wsEndpoint = `${wsBase.replace(/\/$/, "")}/ws/stream`;
+      const wsUrl = wsEndpoint;
       try {
-        const ws = new WebSocket(BACKEND_WS_URL);
+        const ws = new WebSocket(wsUrl);
         wsRef.current = ws;
 
         ws.onopen = () => {

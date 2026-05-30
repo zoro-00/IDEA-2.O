@@ -8,13 +8,13 @@ import { RiskRadar } from "@/components/charts/RiskRadar";
 import { STAGGER_CONTAINER, STAGGER_ITEM_UP } from "@/animations/variants";
 import { useAMLStore } from "@/store/useAMLStore";
 import { useWebSocketSim } from "@/hooks/useWebSocketSim";
-import { starApi } from "@/lib/api";
+import { starApi, SystemHealth } from "@/lib/api";
 import { Activity, ShieldAlert, Crosshair, Network, BarChart2 } from "lucide-react";
 import { formatCurrency, getRiskColor } from "@/utils/format";
 
 export default function DashboardPage() {
   const { alerts, transactions } = useAMLStore();
-  const [healthData, setHealthData] = useState<any>(null);
+  const [healthData, setHealthData] = useState<SystemHealth | null>(null);
   
   // Start websocket simulation when on dashboard
   useWebSocketSim();
@@ -27,6 +27,8 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // TODO: Replace with real API calls when backend endpoints are available
+  // Potential endpoints: /analytics/volume, /analytics/risk-vector
   const mockVolumeData = [
     { time: "00:00", volume: 1200, anomaly: 0 },
     { time: "04:00", volume: 900, anomaly: 200 },
@@ -153,7 +155,7 @@ export default function DashboardPage() {
               )}
             </h3>
             <div className="space-y-4">
-              {healthData ? healthData.services.map((svc: any) => (
+              {healthData ? healthData.services.map((svc) => (
                 <div key={svc.name}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-[#94A3B8]">{svc.name}</span>

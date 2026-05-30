@@ -5,6 +5,7 @@ Thumbs.db
 # IDEs and editors
 .vscode/
 .idea/
+.venv
 
 # Local env files
 .env*.local

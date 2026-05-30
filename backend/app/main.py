@@ -89,18 +89,24 @@ def create_app() -> FastAPI:
         from app.services.isolation_forest_service import isolation_forest_service
         try:
             isolation_forest_service.load()
-            logger.info("  └── ✅ SUCCESS: Isolation Forest loaded (Threshold: %s)", isolation_forest_service.get_threshold() if isolation_forest_service.is_loaded else 'N/A')
+            if isolation_forest_service.is_loaded:
+                logger.info("  └── ✅ Isolation Forest loaded (Threshold: %s)", isolation_forest_service.get_threshold())
+            else:
+                logger.warning("  └── ⚠️ Isolation Forest not loaded; operating in degraded mode")
         except Exception as e:
-            logger.error("  └── ❌ FAILURE: Isolation Forest load failed: %s", e)
+            logger.error("  └── ❌ FAILURE: Isolation Forest load raised exception: %s", e)
 
         # 2. Load TGNN
         logger.info("[2/5] Loading TGNN (GATe) Graph Intelligence Engine...")
         from app.services.tgnn_service import tgnn_service
         try:
             tgnn_service.load()
-            logger.info("  └── ✅ SUCCESS: TGNN Engine loaded")
+            if tgnn_service.is_loaded:
+                logger.info("  └── ✅ TGNN Engine loaded")
+            else:
+                logger.warning("  └── ⚠️ TGNN Engine not loaded; operating without graph NN inference")
         except Exception as e:
-            logger.error("  └── ❌ FAILURE: TGNN load failed: %s", e)
+            logger.error("  └── ❌ FAILURE: TGNN load raised exception: %s", e)
 
         # 3. Connect Neo4j
         logger.info("[3/5] Connecting to Graph Store (Neo4j/NetworkX)...")

@@ -19,6 +19,8 @@ from app.models.responses import AlertResponse
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/alerts", tags=["Alerts"])
 
+__all__ = ["router", "add_alert"]
+
 # ── In-memory alert store ─────────────────────────────────────
 # In production this would be a database; here we keep a ring buffer
 _ALERTS: List[dict] = []
@@ -100,22 +102,22 @@ async def alert_stats():
 def _ensure_alert_fields(a: dict) -> dict:
     """Ensure all required AlertResponse fields have defaults."""
     return {
-        "id": a.get("id", f"ALT-{str(uuid.uuid4())[:6].upper()}"),
+        "id": a.get("id", f"ALT-{str(uuid.uuid4())[:8].upper()}"),
         "type": a.get("type", "gnn_flagged"),
         "severity": a.get("severity", "medium"),
         "score": a.get("score", 0.0),
         "entities": a.get("entities", []),
-        "entity_count": a.get("entityCount", len(a.get("entities", []))),
+        "entity_count": a.get("entity_count", len(a.get("entities", []))),
         "amount": a.get("amount", "$0.00"),
-        "amount_raw": a.get("amountRaw", 0.0),
+        "amount_raw": a.get("amount_raw", a.get("amountRaw", 0.0)),
         "time": a.get("time", datetime.now(timezone.utc).strftime("%H:%M:%S")),
         "timestamp": a.get("timestamp", time.time()),
         "description": a.get("description", ""),
         "status": a.get("status", "open"),
         "assignee": a.get("assignee"),
         "tags": a.get("tags", []),
-        "related_transactions": a.get("relatedTransactions", []),
-        "graph_path": a.get("graphPath"),
+        "related_transactions": a.get("related_transactions", a.get("relatedTransactions", [])),
+        "graph_path": a.get("graph_path", a.get("graphPath")),
         "if_score": a.get("if_score"),
         "tgnn_score": a.get("tgnn_score"),
         "rule_hits": a.get("rule_hits", []),

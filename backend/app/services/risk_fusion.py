@@ -180,13 +180,14 @@ class RiskFusionEngine:
 
     @staticmethod
     def _score_to_level(score: float) -> str:
-        if score < 20:
+        # Use centralized risk thresholds from config
+        if score < settings.RISK_THRESHOLD_NORMAL:
             return "normal"
-        if score < 40:
+        if score < settings.RISK_THRESHOLD_MONITORING:
             return "monitoring"
-        if score < 60:
+        if score < settings.RISK_THRESHOLD_MODERATE:
             return "moderate"
-        if score < 75:
+        if score < settings.RISK_THRESHOLD_HIGH:
             return "high"
         return "critical"
 

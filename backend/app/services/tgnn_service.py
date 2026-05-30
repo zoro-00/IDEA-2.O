@@ -49,7 +49,9 @@ class TGNNService:
 
             checkpoint_path = self._tgnn_dir / "checkpoint.tar"
             if not checkpoint_path.exists():
-                raise FileNotFoundError(f"TGNN checkpoint not found at {checkpoint_path}")
+                logger.error("TGNN checkpoint not found at %s", checkpoint_path)
+                self._loaded = False
+                return
 
             logger.info("Loading TGNN model from %s", checkpoint_path)
             self._engine = TGNNInferenceEngine(checkpoint_path=checkpoint_path)
@@ -62,7 +64,12 @@ class TGNNService:
             )
         except ImportError as e:
             logger.error("Could not import TGNN inference engine: %s", e)
-            raise
+            self._loaded = False
+            return
+        except Exception as e:
+            logger.error("TGNN load failed: %s", e)
+            self._loaded = False
+            return
 
     def score_graph(self, data: Any) -> TGNNScore:
         """
@@ -134,13 +141,14 @@ class TGNNService:
 
     @staticmethod
     def _score_to_risk(score: float) -> str:
-        if score < 20:
+        # Use centralized risk thresholds from config
+        if score < settings.RISK_THRESHOLD_NORMAL:
             return "normal"
-        if score < 40:
+        if score < settings.RISK_THRESHOLD_MONITORING:
             return "monitoring"
-        if score < 60:
+        if score < settings.RISK_THRESHOLD_MODERATE:
             return "moderate"
-        if score < 75:
+        if score < settings.RISK_THRESHOLD_HIGH:
             return "high"
         return "critical"
 

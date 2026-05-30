@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     NEO4J_USER: str = "neo4j"
     NEO4J_PASSWORD: str = "password"
     NEO4J_DATABASE: str = "neo4j"
+    NEO4J_RETRY_ATTEMPTS: int = 3
+    NEO4J_RETRY_BACKOFF: float = 1.0
 
     # ── Model Paths ──────────────────────────────────────────
     BACKEND_DIR: Path = Path(__file__).resolve().parents[2]
@@ -46,6 +48,12 @@ class Settings(BaseSettings):
     IF_WEIGHT: float = 0.35
     TGNN_WEIGHT: float = 0.40
     RULE_WEIGHT: float = 0.25
+
+    # ── Risk Level Thresholds (standardized across all services) ──
+    RISK_THRESHOLD_NORMAL: float = 30.0
+    RISK_THRESHOLD_MONITORING: float = 45.0
+    RISK_THRESHOLD_MODERATE: float = 60.0
+    RISK_THRESHOLD_HIGH: float = 75.0
 
     # ── Streaming ────────────────────────────────────────────
     STREAM_INTERVAL_MS: int = 2000  # how often synthetic txns are generated
