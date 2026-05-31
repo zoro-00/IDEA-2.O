@@ -1,0 +1,12 @@
+name,occupation,expected_volume
+Alice Chen,Student,2000
+Bob Smith,Teacher,5000
+Charlie Day,Retail Manager,8000
+Global Logistics Ltd,Corporate,500000
+Shell Co Alpha,Holding,1000000
+Intermediate_1,Generic,1000
+Intermediate_2,Generic,1000
+Target_Acc,Generic,1000
+Cash_Deposit_Point,ATM/Branch,50000
+Retailer,Merchant,20000
+Dormant_Dave,Retired,1000

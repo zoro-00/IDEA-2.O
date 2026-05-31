@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -8,27 +9,87 @@ import { STAGGER_CONTAINER, STAGGER_ITEM_UP } from "@/animations/variants";
 import { Search, Brain, Target, Zap, AlertTriangle, ShieldCheck } from "lucide-react";
 
 export default function RiskEnginePage() {
-  const histogramData = [
-    { range: "0.0-0.1", count: 4000, isAnomaly: false },
-    { range: "0.1-0.2", count: 8500, isAnomaly: false },
-    { range: "0.2-0.3", count: 12000, isAnomaly: false },
-    { range: "0.3-0.4", count: 9000, isAnomaly: false },
-    { range: "0.4-0.5", count: 4500, isAnomaly: false },
-    { range: "0.5-0.6", count: 1200, isAnomaly: false },
-    { range: "0.6-0.7", count: 400, isAnomaly: true },
-    { range: "0.7-0.8", count: 150, isAnomaly: true },
-    { range: "0.8-0.9", count: 45, isAnomaly: true },
-    { range: "0.9-1.0", count: 12, isAnomaly: true },
-  ];
+  const [features, setFeatures] = useState<{name: string, weight: number, color: string}[]>([]);
+  const [modelStatus, setModelStatus] = useState<string>("loading");
+  const [histogramData, setHistogramData] = useState([
+    { range: "0.0-0.1", count: 0, isAnomaly: false },
+    { range: "0.1-0.2", count: 0, isAnomaly: false },
+    { range: "0.2-0.3", count: 0, isAnomaly: false },
+    { range: "0.3-0.4", count: 0, isAnomaly: false },
+    { range: "0.4-0.5", count: 0, isAnomaly: false },
+    { range: "0.5-0.6", count: 0, isAnomaly: false },
+    { range: "0.6-0.7", count: 0, isAnomaly: true },
+    { range: "0.7-0.8", count: 0, isAnomaly: true },
+    { range: "0.8-0.9", count: 0, isAnomaly: true },
+    { range: "0.9-1.0", count: 0, isAnomaly: true },
+  ]);
+  
+  // 1. Fetch static SHAP features
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/system/models/isolation-forest/stats");
+        if (res.ok) {
+          const data = await res.json();
+          setModelStatus(data.status);
+          if (data.status === "online" && data.top_features) {
+            const colors = ["#F43F5E", "#F97316", "#EAB308", "#3B82F6", "#A855F7", "#00F5FF", "#10B981", "#EC4899", "#8B5CF6", "#14B8A6"];
+            setFeatures(data.top_features.map((f: any, i: number) => ({
+              name: f.feature,
+              weight: f.importance / 100, // normalize to 0-1 for the bar width
+              color: colors[i % colors.length]
+            })));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch IF stats", e);
+      }
+    };
+    
+    fetchStats();
+    const interval = setInterval(fetchStats, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const features = [
-    { name: "out_degree", weight: 0.85, color: "#F43F5E" },
-    { name: "txn_velocity", weight: 0.72, color: "#F97316" },
-    { name: "structuring_ratio", weight: 0.65, color: "#EAB308" },
-    { name: "pagerank", weight: 0.58, color: "#3B82F6" },
-    { name: "night_ratio", weight: 0.45, color: "#A855F7" },
-    { name: "fan_out_ratio", weight: 0.38, color: "#00F5FF" },
-  ];
+  // 2. Stream live CSV data for the IF score histogram
+  useEffect(() => {
+    let ws: WebSocket;
+    let isMounted = true;
+
+    const connect = () => {
+      ws = new WebSocket("ws://localhost:8000/ws/inference");
+
+      ws.onmessage = (event) => {
+        if (!isMounted) return;
+        const msg = JSON.parse(event.data);
+        if ((msg.type === "transaction" || msg.type === "alert") && msg.data && msg.data.if_score !== undefined) {
+          const score = msg.data.if_score;
+          
+          setHistogramData(prev => {
+            const next = [...prev];
+            // Determine bin index (0 to 9)
+            let bin = Math.floor(score * 10);
+            if (bin >= 10) bin = 9;
+            if (bin < 0) bin = 0;
+            
+            next[bin] = { ...next[bin], count: next[bin].count + 1 };
+            return next;
+          });
+        }
+      };
+
+      ws.onclose = () => {
+        if (isMounted) setTimeout(connect, 3000);
+      };
+    };
+
+    connect();
+
+    return () => {
+      isMounted = false;
+      if (ws) ws.close();
+    };
+  }, []);
 
   return (
     <div className="p-6 lg:p-10 max-w-[1600px] mx-auto min-h-[calc(100vh-64px)]">
@@ -82,7 +143,7 @@ export default function RiskEnginePage() {
           <GlassCard className="p-6 h-[400px] flex flex-col border-t-2 border-t-[#00F5FF]">
             <h3 className="font-bold text-white text-sm mb-6">Global Feature Importance (SHAP)</h3>
             <div className="flex-1 flex flex-col justify-center gap-4">
-              {features.map((f, i) => (
+              {modelStatus === "online" ? features.map((f, i) => (
                 <div key={f.name}>
                   <div className="flex justify-between text-[10px] font-mono text-[#E2E8F0] mb-1.5 uppercase">
                     <span>{f.name}</span>
@@ -98,7 +159,9 @@ export default function RiskEnginePage() {
                     />
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center text-[#94A3B8] text-sm">Model currently offline or loading...</div>
+              )}
             </div>
           </GlassCard>
         </motion.div>

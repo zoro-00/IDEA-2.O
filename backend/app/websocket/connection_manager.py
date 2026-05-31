@@ -88,3 +88,4 @@ class ConnectionManager:
 # ── Singletons ────────────────────────────────────────────────
 stream_manager = ConnectionManager()   # /ws/stream  — transactions + alerts
 graph_manager = ConnectionManager()    # /ws/graph   — live graph mutations
+inference_manager = ConnectionManager() # /ws/inference — dynamic TGNN demo

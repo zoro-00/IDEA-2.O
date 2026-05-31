@@ -16,7 +16,7 @@ from app.models.responses import (
 )
 from app.services.isolation_forest_service import isolation_forest_service
 from app.services.neo4j_service import neo4j_service
-from app.services.tgnn_service import tgnn_service
+from app.services.tgnn_service import inference_service
 from app.services.copilot_service import copilot_service
 from app.websocket.connection_manager import stream_manager
 from app.websocket.stream_manager import transaction_stream_manager
@@ -38,10 +38,10 @@ async def health_check() -> SystemHealthResponse:
             else "Model not loaded",
         ),
         ServiceStatus(
-            name="TGNN (GATe)",
-            status="online" if tgnn_service.is_loaded else "offline",
+            name="TGNN (GATe) Inference Demo",
+            status="online" if inference_service.is_loaded else "offline",
             latency_ms=None,
-            details="Graph intelligence ready" if tgnn_service.is_loaded
+            details="Graph intelligence ready" if inference_service.is_loaded
             else "Checkpoint not loaded",
         ),
         ServiceStatus(
@@ -87,9 +87,17 @@ async def health_check() -> SystemHealthResponse:
 async def get_metrics() -> MetricsResponse:
     """Runtime metrics for the STAR pipeline."""
     stats = transaction_stream_manager.get_stats()
+    
+    # Get active alerts (simulated via neo4j count if available, else from stream manager)
+    # The stream manager 'alerts_generated' is total, but for active we'll just show total for the demo,
+    # or query Neo4j for PENDING_REVIEW alerts.
+    active_alerts = stats.get("alerts_generated", 0)
+    
     return MetricsResponse(
         transactions_scored=stats.get("transactions_processed", 0),
         alerts_generated=stats.get("alerts_generated", 0),
+        active_alerts=active_alerts,
+        graph_nodes=neo4j_service.node_count,
         avg_if_latency_ms=12.0,   # approximate
         avg_tgnn_latency_ms=45.0,
         avg_fusion_latency_ms=2.0,
@@ -113,9 +121,42 @@ async def model_info() -> ModelInfoResponse:
     else:
         if_meta = {"status": "not_loaded"}
 
-    tgnn_meta = tgnn_service.get_model_info()
+    tgnn_meta = {}
+    if inference_service.is_loaded:
+        tgnn_meta = {
+            "type": "Hybrid GATe + RuleEngine",
+            "gnn_weight": inference_service.GNN_WEIGHT,
+            "rule_weight": inference_service.RULE_WEIGHT,
+            "status": "loaded",
+        }
+    else:
+        tgnn_meta = {"status": "not_loaded"}
 
     return ModelInfoResponse(
         isolation_forest=if_meta,
         tgnn=tgnn_meta,
     )
+
+
+@router.get("/models/isolation-forest/stats")
+async def isolation_forest_stats() -> dict:
+    """Return real-time stats and SHAP importances for the Isolation Forest."""
+    if not isolation_forest_service.is_loaded:
+        return {"status": "not_loaded", "importances": []}
+
+    importances = isolation_forest_service.get_feature_importances()
+    
+    # Sort and format for the frontend chart
+    formatted_importances = []
+    for feat, imp in sorted(importances.items(), key=lambda x: x[1], reverse=True):
+        formatted_importances.append({
+            "feature": feat.replace("_", " ").title(),
+            "importance": round(imp * 100, 2)
+        })
+
+    return {
+        "status": "online",
+        "threshold": isolation_forest_service.get_threshold(),
+        "top_features": formatted_importances[:10],
+        "all_features": formatted_importances
+    }

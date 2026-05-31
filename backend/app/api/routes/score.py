@@ -27,7 +27,6 @@ from app.services.isolation_forest_service import isolation_forest_service
 from app.services.neo4j_service import neo4j_service
 from app.services.risk_fusion import risk_fusion_engine
 from app.services.rule_engine import rule_engine
-from app.services.tgnn_service import tgnn_service
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/score", tags=["Scoring"])
@@ -96,15 +95,10 @@ async def score_transaction(request: ScoreTransactionRequest) -> FusedRiskRespon
             logger.error("IF error: %s", e)
 
     # ── TGNN Scoring ──────────────────────────────────────────
+    # NOTE: TGNN inference now runs through the dedicated /ws/inference
+    # WebSocket pipeline (TGNN Demo page). The /score routes use
+    # Isolation Forest + Rule Engine for per-transaction scoring.
     tgnn_score = None
-    if tgnn_service.is_loaded:
-        try:
-            src_feat, dst_feat, edge_feat = (
-                graph_builder_service.build_single_transaction_inputs(tx, context_stats)
-            )
-            tgnn_score = tgnn_service.score_transaction(src_feat, dst_feat, edge_feat)
-        except Exception as e:
-            logger.error("TGNN error: %s", e)
 
     # ── Rule Engine ───────────────────────────────────────────
     rule_hits = rule_engine.analyze(tx.from_account, all_txns)
@@ -137,39 +131,9 @@ async def score_graph(request: ScoreGraphRequest) -> FusedRiskResponse:
     Run full GATe TGNN inference on a transaction graph.
     Returns per-edge fraud probabilities + fused risk score.
     """
-    if not tgnn_service.is_loaded:
-        raise HTTPException(503, "TGNN service not loaded")
-
-    if len(request.transactions) < 2:
-        raise HTTPException(400, "Need at least 2 transactions to build a graph")
-
-    try:
-        pyg_data = graph_builder_service.build_pyg_graph(request.transactions)
-        tgnn_score = tgnn_service.score_graph(pyg_data)
-    except Exception as e:
-        raise HTTPException(500, f"Graph inference failed: {e}")
-
-    # IF on first account's features
-    if_score = None
-    if isolation_forest_service.is_loaded and request.account_id:
-        features = feature_engineering_service.compute_if_features(
-            request.account_id, request.transactions
-        )
-        if_score = isolation_forest_service.score(request.account_id, features)
-
-    rule_hits = rule_engine.analyze(
-        request.account_id or request.transactions[0].from_account,
-        request.transactions,
-    )
-
-    fused = risk_fusion_engine.fuse(
-        account_id=request.account_id,
-        if_score=if_score,
-        tgnn_score=tgnn_score,
-        rule_hits=rule_hits,
-    )
-
-    return _build_fused_response(request.account_id, fused)
+    # NOTE: Full graph TGNN inference now runs through /ws/inference
+    # Use the TGNN Demo page (/tgnn) for GATe graph-level scoring.
+    raise HTTPException(503, "Full-graph TGNN scoring moved to /ws/inference (TGNN Demo page)")
 
 
 def _build_fused_response(account_id, fused) -> FusedRiskResponse:

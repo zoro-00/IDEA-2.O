@@ -43,15 +43,11 @@ async def trace_path(
     return result
 
 
-@router.get("/communities")
-async def get_communities():
-    """Run community detection and return node → community mapping."""
-    communities = neo4j_service.community_detection()
-    return {
-        "communities": communities,
-        "total_communities": len(set(communities.values())),
-        "total_nodes": len(communities),
-    }
+@router.get("/communities", response_model=GraphDataResponse)
+async def get_communities() -> GraphDataResponse:
+    """Run community detection and return the full graph colored by communities."""
+    neo4j_service.community_detection()
+    return neo4j_service.get_full_graph()
 
 
 @router.get("/stats")

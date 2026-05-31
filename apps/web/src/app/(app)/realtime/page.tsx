@@ -21,6 +21,9 @@ export default function RealtimePage() {
             Streaming Center
           </h1>
           <p className="text-[#94A3B8]">Live WebSocket ingest and real-time anomaly classification.</p>
+          <p className="text-[#F43F5E] text-[10px] mt-1 font-mono uppercase">
+            Note: This global stream continuously processes data from the backend independently of the TGNN Demo controls.
+          </p>
         </div>
         
         <div className="flex items-center gap-4">

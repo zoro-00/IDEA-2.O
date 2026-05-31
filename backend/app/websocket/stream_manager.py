@@ -10,7 +10,7 @@ import random
 import time
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from app.core.config import settings
 from app.models.requests import RawTransactionRequest
@@ -18,60 +18,49 @@ from app.websocket.connection_manager import graph_manager, stream_manager
 
 logger = logging.getLogger(__name__)
 
-# ── Demo Account Pool ─────────────────────────────────────────
-ACCOUNT_POOL = [
-    "ACCT-1001", "ACCT-1002", "ACCT-1003", "ACCT-1004", "ACCT-1005",
-    "ACCT-2001", "ACCT-2002", "ACCT-2003", "SHELL-A", "SHELL-B",
-    "ACCT-3001", "ACCT-3002", "ACCT-3003", "OFFSHORE-1", "ACCT-4001",
-]
+# ── Replay Configuration ────────────────────────────────────────
+# We now rely entirely on the real IBM AML datasets loaded by InferenceService
 
-CURRENCIES = ["USD", "EUR", "GBP", "CHF", "AED"]
-FORMATS = ["SWIFT", "WIRE", "ACH", "FEDWIRE", "RTGS"]
-
-# Known suspicious accounts for seeding fraud scenarios
-SUSPICIOUS_ACCOUNTS = {"SHELL-A", "SHELL-B", "OFFSHORE-1"}
-
-
-def _random_transaction(suspicious_override: bool = False) -> RawTransactionRequest:
-    is_sus = suspicious_override or random.random() > 0.85
-    src = random.choice(ACCOUNT_POOL)
-    dst = random.choice([a for a in ACCOUNT_POOL if a != src])
-
-    if is_sus:
-        src = random.choice(list(SUSPICIOUS_ACCOUNTS))
-        amount = random.uniform(8_500, 9_800)  # structuring range
-    else:
-        amounts = [1_200, 4_500, 15_000, 48_000, 3_400, 9_200]
-        amount = random.choice(amounts) + random.uniform(0, 499)
-
-    return RawTransactionRequest(
-        id=f"TXN-{str(uuid.uuid4())[:8].upper()}",
-        from_account=src,
-        to_account=dst,
-        amount=round(amount, 2),
-        currency=random.choice(CURRENCIES),
-        payment_format=random.choice(FORMATS),
-        timestamp=time.time(),
-    )
 
 
 async def run_pipeline_on_transaction(
-    tx: RawTransactionRequest,
+    idx: int,
+    tx_obj: Any,
+    node_state: Dict
 ) -> Optional[Dict]:
     """
-    Execute the full STAR pipeline on a single transaction:
+    Execute the full STAR pipeline on a REAL transaction from the CSV:
     Feature Engineering → IF → TGNN → Rules → Fusion → Alert
     Returns the WS payload dict or None if below threshold.
     """
     from app.services.feature_engineering import feature_engineering_service
     from app.services.graph_builder import graph_builder_service
     from app.services.isolation_forest_service import isolation_forest_service
-    from app.services.tgnn_service import tgnn_service
     from app.services.rule_engine import rule_engine
     from app.services.risk_fusion import risk_fusion_engine
     from app.services.neo4j_service import neo4j_service
+    from app.services.tgnn_service import inference_service, CURRENCY_LABELS, PAYMENT_FORMAT_LABELS
+    from app.websocket.connection_manager import inference_manager
+    from app.models.responses import TGNNScoreResponse
 
     pipeline_start = time.perf_counter()
+
+    # Convert the TGNN Transaction dataclass to our RawTransactionRequest
+    sender_name = inference_service.SCENARIO["entity_names"][tx_obj.sender_idx]
+    receiver_name = inference_service.SCENARIO["entity_names"][tx_obj.receiver_idx]
+    
+    currency_str = CURRENCY_LABELS[tx_obj.sent_currency] if tx_obj.sent_currency < len(CURRENCY_LABELS) else "USD"
+    format_str = PAYMENT_FORMAT_LABELS[tx_obj.payment_format] if tx_obj.payment_format < len(PAYMENT_FORMAT_LABELS) else "WIRE"
+
+    tx = RawTransactionRequest(
+        id=f"TX_{idx:04d}",
+        from_account=sender_name,
+        to_account=receiver_name,
+        amount=tx_obj.amount_sent,
+        currency=currency_str,
+        payment_format=format_str,
+        timestamp=tx_obj.timestamp,
+    )
 
     # ── Step 1: Feature Engineering ───────────────────────────
     context_stats = feature_engineering_service.compute_context_stats([tx])
@@ -98,14 +87,27 @@ async def run_pipeline_on_transaction(
         except Exception as e:
             logger.warning("IF scoring failed: %s", e)
 
-    # ── Step 4: TGNN Inference ─────────────────────────────────
+    # ── Step 4: TGNN Inference (Precomputed via CSV) ─────────────
     tgnn_score = None
-    if tgnn_service.is_loaded:
+    tgnn_data = None
+    if inference_service.is_loaded:
         try:
-            src_feat, dst_feat, edge_feat = graph_builder_service.build_single_transaction_inputs(
-                tx, context_stats
+            # We use the exact precomputed scores for the CSV scenario, cascading with Isolation Forest
+            tgnn_data = inference_service.score_transaction(idx, tx_obj, node_state)
+            
+            # If IF flagged this strongly, we can explicitly add an explainability reason!
+            if if_score and if_score.is_anomalous:
+                tgnn_data["reasons"].append(f"Behavioral Anomaly cascaded from Isolation Forest ({if_score.risk_score:.0f}/100)")
+            
+            tgnn_score = TGNNScoreResponse(
+                fraud_probability=tgnn_data["gnn_score"],
+                fraud_score=tgnn_data["risk_score"],
+                risk_level="high" if tgnn_data["is_alert"] else "low",
+                is_suspicious=tgnn_data["is_alert"],
+                attention_layers=2,
+                edge_scores=[tgnn_data["att_score"]],
+                inference_ms=10.0,
             )
-            tgnn_score = tgnn_service.score_transaction(src_feat, dst_feat, edge_feat)
         except Exception as e:
             logger.warning("TGNN scoring failed: %s", e)
 
@@ -142,6 +144,60 @@ async def run_pipeline_on_transaction(
         },
     }
     await stream_manager.broadcast(tx_payload)
+
+    # ── Step 7.5: TGNN Dynamic Dashboard Broadcast ─────────────
+    if tgnn_data:
+        tgnn_type = "alert" if tgnn_data["is_alert"] else "transaction"
+        tx_type_str = "Normal"
+        for r in tgnn_data["reasons"]:
+            if "Dispersion" in r: tx_type_str = "Dispersion"
+            elif "Gathering" in r: tx_type_str = "Gathering"
+            elif "Layering" in r or "Pass-Through" in r: tx_type_str = "Layering"
+            elif "Structuring" in r: tx_type_str = "Structuring"
+
+        cycle_path = []
+        cycle_edges = []
+        case_id = f"CASE_{tx.id}"
+        
+        if tgnn_data["is_alert"]:
+            tx_type_str = tx_type_str if tx_type_str != "Normal" else "Anomaly"
+            # Dynamic Cycle Detection
+            async with neo4j_service._async_driver.session() as session:
+                result = await session.run("""
+                    MATCH path = (r:Account {id: $r_id})-[:TRANSACT*1..3]->(s:Account {id: $s_id})
+                    WHERE $r_id <> $s_id
+                    RETURN
+                        [n IN nodes(path) | n.id] AS cycle_nodes,
+                        [rel IN relationships(path) | rel.tx_id] AS cycle_edges
+                    LIMIT 1
+                """, r_id=tx.to_account, s_id=tx.from_account)
+                record = await result.single()
+                if record is not None:
+                    cycle_path = [tx.from_account] + record["cycle_nodes"]
+                    cycle_edges = record["cycle_edges"] + [tx.id]
+                    tgnn_data["reasons"].append("Circular Routing Typology Detected")
+                    tx_type_str = "Circular"
+
+        tgnn_payload = {
+            "type": tgnn_type,
+            "data": {
+                "tx_id": tx.id,
+                "case_id": case_id if tgnn_data["is_alert"] else None,
+                "sender": tx.from_account,
+                "receiver": tx.to_account,
+                "amount": tx.amount,
+                "tx_type": tx_type_str,
+                "risk_score": tgnn_data["risk_score"],
+                "currency": tx.currency,
+                "payment_format": tx.payment_format,
+                "timestamp": int(tx.timestamp),
+                "reasons": tgnn_data["reasons"],
+                "cycle_path": cycle_path,
+                "cycle_edges": cycle_edges,
+                "is_fraud_gt": tx_obj.is_fraud == 1,
+            }
+        }
+        await inference_manager.broadcast(tgnn_payload)
 
     # ── Step 8: Broadcast alert if threshold crossed ──────────
     if fused.alert_generated:
@@ -240,20 +296,44 @@ class TransactionStreamManager:
 
     async def _loop(self) -> None:
         interval = settings.STREAM_INTERVAL_MS / 1000.0
-        fraud_cycle = 0
+        
+        from app.services.tgnn_service import inference_service
+        
+        # Wait until InferenceService has loaded the CSV scenario
+        while not getattr(inference_service, "is_loaded", False):
+            await asyncio.sleep(1.0)
+            
+        scenario_txs = inference_service.SCENARIO["transactions"]
+        total_txs = len(scenario_txs)
+        
+        node_state = {}
+        
+        # We loop infinitely over the CSV to keep the live dashboard going
         while self._running:
             try:
-                # Every 10th transaction, seed a suspicious one
-                fraud_cycle += 1
-                is_fraud = fraud_cycle % 10 == 0
-                tx = _random_transaction(suspicious_override=is_fraud)
+                for idx, tx_obj in enumerate(scenario_txs):
+                    if not self._running:
+                        break
+                        
+                    # Maintain rule-engine state
+                    if tx_obj.sender_idx not in node_state:
+                        node_state[tx_obj.sender_idx] = {"in": 0, "out": 0}
+                    if tx_obj.receiver_idx not in node_state:
+                        node_state[tx_obj.receiver_idx] = {"in": 0, "out": 0}
+                        
+                    node_state[tx_obj.sender_idx]["out"] += 1
+                    node_state[tx_obj.receiver_idx]["in"] += 1
 
-                alert = await run_pipeline_on_transaction(tx)
-                self._stats["transactions_processed"] += 1
-                if alert:
-                    self._stats["alerts_generated"] += 1
+                    alert = await run_pipeline_on_transaction(idx, tx_obj, node_state)
+                    
+                    self._stats["transactions_processed"] += 1
+                    if alert:
+                        self._stats["alerts_generated"] += 1
 
-                await asyncio.sleep(interval)
+                    await asyncio.sleep(interval)
+                    
+                # Reset node_state if we loop
+                node_state.clear()
             except asyncio.CancelledError:
                 break
             except Exception as e:

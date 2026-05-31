@@ -203,7 +203,7 @@ export const starApi = {
       is_circular: boolean;
     }>(`/graph/path?from_id=${fromId}&to_id=${toId}`),
 
-  getCommunities: () => apiFetch<Record<string, unknown>>("/graph/communities"),
+  getCommunities: () => apiFetch<GraphData>("/graph/communities"),
   getGraphStats: () => apiFetch<Record<string, unknown>>("/graph/stats"),
 
   // Copilot

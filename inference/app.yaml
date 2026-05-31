@@ -1,0 +1,25 @@
+name: fcci-star-aml
+region: nyc
+services:
+  - name: backend
+    github:
+      branch: main
+      repo: REPLACE_WITH_YOUR_GITHUB_USER/REPLACE_WITH_YOUR_REPO_NAME
+      deploy_on_push: true
+    source_dir: backend
+    dockerfile_path: Dockerfile
+    http_port: 8080
+    instance_size_slug: professional-xs
+static_sites:
+  - name: frontend
+    github:
+      branch: main
+      repo: REPLACE_WITH_YOUR_GITHUB_USER/REPLACE_WITH_YOUR_REPO_NAME
+      deploy_on_push: true
+    source_dir: frontend
+    build_command: npm install && npm run build
+    output_dir: dist
+    envs:
+      - key: VITE_BACKEND_URL
+        scope: BUILD_TIME
+        value: ${backend.PUBLIC_URL}

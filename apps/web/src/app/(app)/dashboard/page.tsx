@@ -15,17 +15,20 @@ import { formatCurrency, getRiskColor } from "@/utils/format";
 export default function DashboardPage() {
   const { alerts, transactions } = useAMLStore();
   const [healthData, setHealthData] = useState<SystemHealth | null>(null);
+  const [metricsData, setMetricsData] = useState<any>(null);
   
   // Start websocket simulation when on dashboard
   useWebSocketSim();
 
   useEffect(() => {
-    const fetchHealth = () =>
+    const fetchHealth = () => {
       starApi.getHealth().then(setHealthData).catch(() => {
         // Silently keep stale data — backend may be reloading
       });
+      starApi.getMetrics().then(setMetricsData).catch(() => {});
+    };
     fetchHealth();
-    const interval = setInterval(fetchHealth, 15000);
+    const interval = setInterval(fetchHealth, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -65,16 +68,16 @@ export default function DashboardPage() {
       >
         {/* Top Metrics Row */}
         <motion.div variants={STAGGER_ITEM_UP}>
-          <MetricCard label="Active Alerts" value={alerts.filter(a => a.status === 'open' || a.status === 'investigating').length} trend={12} icon={ShieldAlert} color="#F43F5E" />
+          <MetricCard label="Active Alerts" value={metricsData?.active_alerts ?? 0} icon={ShieldAlert} color="#F43F5E" />
         </motion.div>
         <motion.div variants={STAGGER_ITEM_UP}>
-          <MetricCard label="Transactions Analyzed" value={2.7} suffix="M" trend={5} icon={Activity} color="#3B82F6" />
+          <MetricCard label="Transactions Analyzed" value={metricsData?.transactions_scored ?? 0} icon={Activity} color="#3B82F6" />
         </motion.div>
         <motion.div variants={STAGGER_ITEM_UP}>
-          <MetricCard label="Graph Nodes" value={1.2} suffix="M" trend={8} icon={Network} color="#A855F7" />
+          <MetricCard label="Graph Nodes" value={metricsData?.graph_nodes ?? 0} icon={Network} color="#A855F7" />
         </motion.div>
         <motion.div variants={STAGGER_ITEM_UP}>
-          <MetricCard label="Avg Scoring Latency" value={47} suffix="ms" trend={-15} icon={Crosshair} color="#10B981" />
+          <MetricCard label="Avg Scoring Latency" value={metricsData?.avg_tgnn_latency_ms ?? 0} suffix="ms" icon={Crosshair} color="#10B981" />
         </motion.div>
 
         {/* Main Dashboard Area */}

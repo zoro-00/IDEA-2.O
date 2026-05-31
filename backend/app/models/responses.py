@@ -173,6 +173,8 @@ class ModelInfoResponse(BaseModel):
 class MetricsResponse(BaseModel):
     transactions_scored: int
     alerts_generated: int
+    active_alerts: int
+    graph_nodes: int
     avg_if_latency_ms: float
     avg_tgnn_latency_ms: float
     avg_fusion_latency_ms: float

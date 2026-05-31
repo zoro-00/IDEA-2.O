@@ -15,21 +15,22 @@ import {
   Briefcase,
   Layers,
   Settings,
-  Hexagon
+  Hexagon,
+  Brain
 } from "lucide-react";
 import { useUIStore } from "@/store/useUIStore";
 
 const SIDEBAR_LINKS = [
   { label: "Command Center", href: "/dashboard", icon: LayoutDashboard },
+  { label: "TGNN Demo", href: "/tgnn", icon: Brain },
   { label: "Realtime Stream", href: "/realtime", icon: Activity },
-  { label: "Graph Intelligence", href: "/graph", icon: Network },
   { label: "Alert Center", href: "/alerts", icon: ShieldAlert },
   { label: "Risk Engine", href: "/risk", icon: Search },
   { label: "Communities", href: "/communities", icon: Users },
   { label: "Temporal Analytics", href: "/temporal", icon: Clock },
   { label: "AI Copilot", href: "/copilot", icon: Bot },
   { label: "Investigations", href: "/investigations", icon: Briefcase },
-  { label: "Architecture", href: "/#architecture", icon: Layers }, // Link back to landing
+  { label: "Architecture", href: "/#architecture", icon: Layers },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

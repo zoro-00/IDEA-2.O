@@ -1,0 +1,28 @@
+{
+    "currency": {
+        "US Dollar": 0,
+        "Euro": 1,
+        "Bitcoin": 2,
+        "Yuan": 3,
+        "Yen": 4,
+        "UK Pound": 5,
+        "Brazil Real": 6,
+        "Australian Dollar": 7,
+        "Rupee": 8,
+        "Ruble": 9,
+        "Canadian Dollar": 10,
+        "Mexican Peso": 11,
+        "Swiss Franc": 12,
+        "Shekel": 13,
+        "Saudi Riyal": 14
+    },
+    "payment_format": {
+        "Reinvestment": 0,
+        "Cheque": 1,
+        "ACH": 2,
+        "Credit Card": 3,
+        "Wire": 4,
+        "Cash": 5,
+        "Bitcoin": 6
+    }
+}

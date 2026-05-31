@@ -1,0 +1,423 @@
+2026-05-18 01:45:52,103 [INFO ] Random seed set as 1
+2026-05-18 01:45:52,104 [INFO ] Retrieving data
+2026-05-18 01:45:52,312 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-18 01:45:54,659 [INFO ] Illicit ratio = 8750 / 98750 = 8.86%
+2026-05-18 01:45:54,660 [INFO ] Number of nodes (holdings doing transcations) = 2500
+2026-05-18 01:45:54,660 [INFO ] Number of transactions = 98750
+2026-05-18 01:45:54,660 [INFO ] Edge features being used: ['Timestamp', 'Amount Received', 'Received Currency', 'Payment Format']
+2026-05-18 01:45:54,660 [INFO ] Node features being used: ['Feature'] ("Feature" is a placeholder feature of all 1s)
+2026-05-18 01:45:54,680 [INFO ] number of days and transactions in the data: 70 days, 98750 transactions
+2026-05-18 01:45:54,808 [INFO ] Calculate split: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], [19, 20, 21, 22, 23, 24, 25], [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]]
+2026-05-18 01:45:54,813 [INFO ] Total train samples: 57.82% || IR: 4.16% || Train days: [0, 1, 2, 3, 4]
+2026-05-18 01:45:54,814 [INFO ] Total val samples: 21.28% || IR: 4.06% || Val days: [19, 20, 21, 22, 23]
+2026-05-18 01:45:54,814 [INFO ] Total test samples: 20.91% || IR: 26.76% || Test days: [26, 27, 28, 29, 30]
+2026-05-18 01:45:54,847 [INFO ] train data object: GraphData(x=[2500, 1], edge_index=[2, 57093], edge_attr=[57093, 4], y=[57093], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[57093])
+2026-05-18 01:45:54,848 [INFO ] validation data object: GraphData(x=[2500, 1], edge_index=[2, 78106], edge_attr=[78106, 4], y=[78106], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[78106])
+2026-05-18 01:45:54,848 [INFO ] test data object: GraphData(x=[2500, 1], edge_index=[2, 98750], edge_attr=[98750, 4], y=[98750], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[98750])
+2026-05-18 01:45:54,850 [INFO ] Retrieved data in 2.75s
+2026-05-18 01:45:54,850 [INFO ] Running Training
+2026-05-18 01:46:24,847 [INFO ] Random seed set as 1
+2026-05-18 01:46:24,847 [INFO ] Retrieving data
+2026-05-18 01:46:25,028 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-18 01:46:26,964 [INFO ] Illicit ratio = 8750 / 98750 = 8.86%
+2026-05-18 01:46:26,964 [INFO ] Number of nodes (holdings doing transcations) = 2500
+2026-05-18 01:46:26,965 [INFO ] Number of transactions = 98750
+2026-05-18 01:46:26,965 [INFO ] Edge features being used: ['Timestamp', 'Amount Received', 'Received Currency', 'Payment Format']
+2026-05-18 01:46:26,965 [INFO ] Node features being used: ['Feature'] ("Feature" is a placeholder feature of all 1s)
+2026-05-18 01:46:26,976 [INFO ] number of days and transactions in the data: 70 days, 98750 transactions
+2026-05-18 01:46:27,090 [INFO ] Calculate split: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], [19, 20, 21, 22, 23, 24, 25], [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]]
+2026-05-18 01:46:27,091 [INFO ] Total train samples: 57.82% || IR: 4.16% || Train days: [0, 1, 2, 3, 4]
+2026-05-18 01:46:27,092 [INFO ] Total val samples: 21.28% || IR: 4.06% || Val days: [19, 20, 21, 22, 23]
+2026-05-18 01:46:27,092 [INFO ] Total test samples: 20.91% || IR: 26.76% || Test days: [26, 27, 28, 29, 30]
+2026-05-18 01:46:27,110 [INFO ] train data object: GraphData(x=[2500, 1], edge_index=[2, 57093], edge_attr=[57093, 4], y=[57093], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[57093])
+2026-05-18 01:46:27,110 [INFO ] validation data object: GraphData(x=[2500, 1], edge_index=[2, 78106], edge_attr=[78106, 4], y=[78106], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[78106])
+2026-05-18 01:46:27,112 [INFO ] test data object: GraphData(x=[2500, 1], edge_index=[2, 98750], edge_attr=[98750, 4], y=[98750], readout='edge', loss_fn='ce', num_nodes=2500, timestamps=[98750])
+2026-05-18 01:46:27,113 [INFO ] Retrieved data in 2.27s
+2026-05-18 01:46:27,113 [INFO ] Running Training
+2026-05-18 01:46:30,176 [INFO ] Train F1: 0.2022
+2026-05-18 01:46:30,951 [INFO ] Validation F1: 0.5210
+2026-05-18 01:46:30,952 [INFO ] Test F1: 0.6552
+2026-05-18 01:46:31,422 [INFO ] Train F1: 0.6024
+2026-05-18 01:46:32,113 [INFO ] Validation F1: 0.4818
+2026-05-18 01:46:32,113 [INFO ] Test F1: 0.7402
+2026-05-18 01:46:32,554 [INFO ] Train F1: 0.6259
+2026-05-18 01:46:33,223 [INFO ] Validation F1: 0.5527
+2026-05-18 01:46:33,223 [INFO ] Test F1: 0.7426
+2026-05-18 01:46:33,685 [INFO ] Train F1: 0.6306
+2026-05-18 01:46:34,393 [INFO ] Validation F1: 0.5919
+2026-05-18 01:46:34,394 [INFO ] Test F1: 0.7299
+2026-05-18 01:46:34,865 [INFO ] Train F1: 0.6480
+2026-05-18 01:46:35,575 [INFO ] Validation F1: 0.5690
+2026-05-18 01:46:35,575 [INFO ] Test F1: 0.6512
+2026-05-24 23:09:14,839 [INFO ] Random seed set as 1
+2026-05-24 23:09:14,840 [INFO ] Retrieving data
+2026-05-24 23:09:22,628 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-25 00:04:26,680 [INFO ] Random seed set as 1
+2026-05-25 00:04:26,680 [INFO ] Retrieving data
+2026-05-25 00:04:33,422 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-25 00:06:24,223 [INFO ] Illicit ratio = 3565 / 6924049 = 0.05%
+2026-05-25 00:06:24,229 [INFO ] Number of nodes (holdings doing transcations) = 705907
+2026-05-25 00:06:24,229 [INFO ] Number of transactions = 6924049
+2026-05-25 00:06:24,229 [INFO ] Edge features being used: ['Timestamp', 'Amount Received', 'Received Currency', 'Payment Format']
+2026-05-25 00:06:24,230 [INFO ] Node features being used: ['Feature'] ("Feature" is a placeholder feature of all 1s)
+2026-05-25 00:06:25,142 [INFO ] number of days and transactions in the data: 17 days, 6924049 transactions
+2026-05-25 00:06:25,385 [INFO ] Calculate split: [[0, 1, 2, 3, 4, 5], [6, 7], [8, 9, 10, 11, 12, 13, 14, 15, 16]]
+2026-05-25 00:06:25,402 [INFO ] Total train samples: 64.02% || IR: 0.04% || Train days: [0, 1, 2, 3, 4]
+2026-05-25 00:06:25,405 [INFO ] Total val samples: 19.01% || IR: 0.06% || Val days: [6, 7]
+2026-05-25 00:06:25,407 [INFO ] Total test samples: 16.97% || IR: 0.07% || Test days: [8, 9, 10, 11, 12]
+2026-05-25 00:06:26,236 [INFO ] train data object: GraphData(x=[705907, 1], edge_index=[2, 4432934], edge_attr=[4432934, 4], y=[4432934], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[4432934])
+2026-05-25 00:06:26,237 [INFO ] validation data object: GraphData(x=[705907, 1], edge_index=[2, 5749376], edge_attr=[5749376, 4], y=[5749376], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[5749376])
+2026-05-25 00:06:26,237 [INFO ] test data object: GraphData(x=[705907, 1], edge_index=[2, 6924049], edge_attr=[6924049, 4], y=[6924049], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[6924049])
+2026-05-25 00:06:26,248 [INFO ] Retrieved data in 119.57s
+2026-05-25 00:06:26,249 [INFO ] Running Training
+2026-05-25 00:07:20,110 [INFO ] Random seed set as 1
+2026-05-25 00:07:20,111 [INFO ] Retrieving data
+2026-05-25 00:07:25,363 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-25 00:09:20,973 [INFO ] Illicit ratio = 3565 / 6924049 = 0.05%
+2026-05-25 00:09:20,981 [INFO ] Number of nodes (holdings doing transcations) = 705907
+2026-05-25 00:09:20,981 [INFO ] Number of transactions = 6924049
+2026-05-25 00:09:20,981 [INFO ] Edge features being used: ['Timestamp', 'Amount Received', 'Received Currency', 'Payment Format']
+2026-05-25 00:09:20,982 [INFO ] Node features being used: ['Feature'] ("Feature" is a placeholder feature of all 1s)
+2026-05-25 00:09:21,435 [INFO ] number of days and transactions in the data: 17 days, 6924049 transactions
+2026-05-25 00:09:21,678 [INFO ] Calculate split: [[0, 1, 2, 3, 4, 5], [6, 7], [8, 9, 10, 11, 12, 13, 14, 15, 16]]
+2026-05-25 00:09:21,695 [INFO ] Total train samples: 64.02% || IR: 0.04% || Train days: [0, 1, 2, 3, 4]
+2026-05-25 00:09:21,697 [INFO ] Total val samples: 19.01% || IR: 0.06% || Val days: [6, 7]
+2026-05-25 00:09:21,699 [INFO ] Total test samples: 16.97% || IR: 0.07% || Test days: [8, 9, 10, 11, 12]
+2026-05-25 00:09:22,564 [INFO ] train data object: GraphData(x=[705907, 1], edge_index=[2, 4432934], edge_attr=[4432934, 4], y=[4432934], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[4432934])
+2026-05-25 00:09:22,564 [INFO ] validation data object: GraphData(x=[705907, 1], edge_index=[2, 5749376], edge_attr=[5749376, 4], y=[5749376], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[5749376])
+2026-05-25 00:09:22,564 [INFO ] test data object: GraphData(x=[705907, 1], edge_index=[2, 6924049], edge_attr=[6924049, 4], y=[6924049], readout='edge', loss_fn='ce', num_nodes=705907, timestamps=[6924049])
+2026-05-25 00:09:22,590 [INFO ] Retrieved data in 122.48s
+2026-05-25 00:09:22,590 [INFO ] Running Training
+2026-05-25 00:12:01,833 [INFO ] Train F1: 0.0008
+2026-05-25 00:14:23,138 [INFO ] Validation F1: 0.0000
+2026-05-25 00:14:23,139 [INFO ] Test F1: 0.0000
+2026-05-25 00:16:58,419 [INFO ] Train F1: 0.0000
+2026-05-25 00:19:19,377 [INFO ] Validation F1: 0.0000
+2026-05-25 00:19:19,377 [INFO ] Test F1: 0.0000
+2026-05-25 00:21:55,590 [INFO ] Train F1: 0.0000
+2026-05-25 00:24:15,493 [INFO ] Validation F1: 0.0000
+2026-05-25 00:24:15,493 [INFO ] Test F1: 0.0000
+2026-05-25 00:26:54,714 [INFO ] Train F1: 0.0000
+2026-05-25 00:29:12,637 [INFO ] Validation F1: 0.0000
+2026-05-25 00:29:12,639 [INFO ] Test F1: 0.0000
+2026-05-25 00:31:46,154 [INFO ] Train F1: 0.0000
+2026-05-25 00:34:04,293 [INFO ] Validation F1: 0.0000
+2026-05-25 00:34:04,293 [INFO ] Test F1: 0.0000
+2026-05-26 02:56:00,065 [INFO ] Random seed set as 1
+2026-05-26 02:56:00,067 [INFO ] Retrieving data
+2026-05-26 02:56:07,315 [INFO ] Available Edge Features: ['EdgeID', 'from_id', 'to_id', 'Timestamp', 'Amount Sent', 'Sent Currency', 'Amount Received', 'Received Currency', 'Payment Format', 'Is Laundering']
+2026-05-26 02:56:58,958 [INFO ] Illicit ratio = 1397 / 3462024 = 0.04%
+2026-05-26 02:56:58,958 [INFO ] Number of nodes (holdings doing transcations) = 701608
+2026-05-26 02:56:58,958 [INFO ] Number of transactions = 3462024
+2026-05-26 02:56:58,958 [INFO ] Edge features being used: ['Timestamp', 'Amount Received', 'Received Currency', 'Payment Format']
+2026-05-26 02:56:58,958 [INFO ] Node features being used: ['Feature'] ("Feature" is a placeholder feature of all 1s)
+2026-05-26 02:56:59,141 [INFO ] number of days and transactions in the data: 5 days, 3462024 transactions
+2026-05-26 02:56:59,217 [INFO ] Calculate split: [[0], [1], [2, 3, 4]]
+2026-05-26 02:56:59,226 [INFO ] Total train samples: 44.04% || IR: 0.02% || Train days: [0]
+2026-05-26 02:56:59,228 [INFO ] Total val samples: 29.69% || IR: 0.03% || Val days: [1]
+2026-05-26 02:56:59,231 [INFO ] Total test samples: 26.27% || IR: 0.08% || Test days: [2, 3, 4]
+2026-05-26 02:56:59,610 [INFO ] train data object: GraphData(x=[701608, 1], edge_index=[2, 1524807], edge_attr=[1524807, 4], y=[1524807], readout='edge', loss_fn='ce', num_nodes=701608, timestamps=[1524807])
+2026-05-26 02:56:59,610 [INFO ] validation data object: GraphData(x=[701608, 1], edge_index=[2, 2552565], edge_attr=[2552565, 4], y=[2552565], readout='edge', loss_fn='ce', num_nodes=701608, timestamps=[2552565])
+2026-05-26 02:56:59,610 [INFO ] test data object: GraphData(x=[701608, 1], edge_index=[2, 3462024], edge_attr=[3462024, 4], y=[3462024], readout='edge', loss_fn='ce', num_nodes=701608, timestamps=[3462024])
+2026-05-26 02:56:59,620 [INFO ] Retrieved data in 59.55s
+2026-05-26 02:56:59,621 [INFO ] Running Training
+2026-05-26 02:57:18,081 [INFO ] Train F1: 0.0005 | Prec: 0.0002 | Rec: 0.0065
+2026-05-26 02:58:13,284 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.5342 | PR-AUC: 0.0005
+2026-05-26 02:58:13,284 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6560 | PR-AUC: 0.0015
+2026-05-26 02:58:30,375 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 02:59:26,321 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7121 | PR-AUC: 0.0009
+2026-05-26 02:59:26,322 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6853 | PR-AUC: 0.0014
+2026-05-26 02:59:44,125 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:00:39,612 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7257 | PR-AUC: 0.0011
+2026-05-26 03:00:39,614 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7249 | PR-AUC: 0.0015
+2026-05-26 03:00:57,252 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:01:52,610 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7623 | PR-AUC: 0.0009
+2026-05-26 03:01:52,611 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6901 | PR-AUC: 0.0012
+2026-05-26 03:02:10,751 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:03:06,862 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7368 | PR-AUC: 0.0008
+2026-05-26 03:03:06,862 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7111 | PR-AUC: 0.0014
+2026-05-26 03:03:24,820 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:04:20,697 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6027 | PR-AUC: 0.0008
+2026-05-26 03:04:20,699 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7106 | PR-AUC: 0.0018
+2026-05-26 03:04:40,268 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:05:37,103 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7960 | PR-AUC: 0.0011
+2026-05-26 03:05:37,103 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6585 | PR-AUC: 0.0011
+2026-05-26 03:05:55,016 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:06:51,373 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8472 | PR-AUC: 0.0030
+2026-05-26 03:06:51,374 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8756 | PR-AUC: 0.0051
+2026-05-26 03:07:09,098 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:08:05,557 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7875 | PR-AUC: 0.0014
+2026-05-26 03:08:05,557 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7661 | PR-AUC: 0.0018
+2026-05-26 03:08:23,501 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:09:18,863 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7928 | PR-AUC: 0.0014
+2026-05-26 03:09:18,863 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7304 | PR-AUC: 0.0015
+2026-05-26 03:09:37,708 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:10:32,343 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7490 | PR-AUC: 0.0010
+2026-05-26 03:10:32,343 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8083 | PR-AUC: 0.0021
+2026-05-26 03:10:50,056 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:11:47,944 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8375 | PR-AUC: 0.0016
+2026-05-26 03:11:47,944 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7134 | PR-AUC: 0.0014
+2026-05-26 03:12:05,171 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:13:02,198 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7962 | PR-AUC: 0.0014
+2026-05-26 03:13:02,198 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6651 | PR-AUC: 0.0011
+2026-05-26 03:13:20,329 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:14:16,225 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8440 | PR-AUC: 0.0022
+2026-05-26 03:14:16,226 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7761 | PR-AUC: 0.0019
+2026-05-26 03:14:34,017 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:15:30,847 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8025 | PR-AUC: 0.0016
+2026-05-26 03:15:30,847 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7523 | PR-AUC: 0.0016
+2026-05-26 03:15:49,591 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:16:45,890 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8437 | PR-AUC: 0.0017
+2026-05-26 03:16:45,892 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7180 | PR-AUC: 0.0013
+2026-05-26 03:17:06,438 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:18:04,866 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8545 | PR-AUC: 0.0027
+2026-05-26 03:18:04,867 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8301 | PR-AUC: 0.0027
+2026-05-26 03:18:25,013 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:19:24,495 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8174 | PR-AUC: 0.0027
+2026-05-26 03:19:24,495 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8193 | PR-AUC: 0.0024
+2026-05-26 03:19:42,685 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:20:43,880 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6843 | PR-AUC: 0.0006
+2026-05-26 03:20:43,881 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6587 | PR-AUC: 0.0011
+2026-05-26 03:21:02,801 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:22:00,825 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7930 | PR-AUC: 0.0010
+2026-05-26 03:22:00,825 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7531 | PR-AUC: 0.0016
+2026-05-26 03:22:19,821 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:23:17,647 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8388 | PR-AUC: 0.0012
+2026-05-26 03:23:17,647 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7986 | PR-AUC: 0.0020
+2026-05-26 03:23:37,978 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:24:36,492 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8406 | PR-AUC: 0.0011
+2026-05-26 03:24:36,492 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7446 | PR-AUC: 0.0015
+2026-05-26 03:24:54,788 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:25:53,605 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7700 | PR-AUC: 0.0007
+2026-05-26 03:25:53,607 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6381 | PR-AUC: 0.0010
+2026-05-26 03:26:11,649 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:27:10,490 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8144 | PR-AUC: 0.0012
+2026-05-26 03:27:10,490 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7045 | PR-AUC: 0.0013
+2026-05-26 03:27:28,590 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:28:25,202 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8976 | PR-AUC: 0.0027
+2026-05-26 03:28:25,202 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8261 | PR-AUC: 0.0025
+2026-05-26 03:28:43,249 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:29:41,254 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8840 | PR-AUC: 0.0025
+2026-05-26 03:29:41,254 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7907 | PR-AUC: 0.0019
+2026-05-26 03:30:01,450 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:31:00,713 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8641 | PR-AUC: 0.0041
+2026-05-26 03:31:00,714 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8674 | PR-AUC: 0.0040
+2026-05-26 03:31:20,694 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:32:20,266 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8640 | PR-AUC: 0.0016
+2026-05-26 03:32:20,266 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7725 | PR-AUC: 0.0018
+2026-05-26 03:32:39,729 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:33:36,882 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8089 | PR-AUC: 0.0010
+2026-05-26 03:33:36,883 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6494 | PR-AUC: 0.0010
+2026-05-26 03:33:54,239 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:34:49,479 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8782 | PR-AUC: 0.0015
+2026-05-26 03:34:49,480 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7603 | PR-AUC: 0.0016
+2026-05-26 03:35:09,867 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:36:08,150 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8926 | PR-AUC: 0.0026
+2026-05-26 03:36:08,150 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7888 | PR-AUC: 0.0021
+2026-05-26 03:36:27,489 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:37:26,303 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8896 | PR-AUC: 0.0037
+2026-05-26 03:37:26,304 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8660 | PR-AUC: 0.0039
+2026-05-26 03:37:44,921 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:38:42,962 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8648 | PR-AUC: 0.0015
+2026-05-26 03:38:42,963 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6800 | PR-AUC: 0.0011
+2026-05-26 03:39:04,716 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:40:03,804 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9066 | PR-AUC: 0.0042
+2026-05-26 03:40:03,805 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8418 | PR-AUC: 0.0026
+2026-05-26 03:40:22,639 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:41:22,942 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9200 | PR-AUC: 0.0057
+2026-05-26 03:41:22,943 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8444 | PR-AUC: 0.0029
+2026-05-26 03:41:41,610 [INFO ] Train F1: 0.0116 | Prec: 0.0588 | Rec: 0.0065
+2026-05-26 03:42:39,502 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9022 | PR-AUC: 0.0025
+2026-05-26 03:42:39,502 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7884 | PR-AUC: 0.0019
+2026-05-26 03:42:58,242 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:43:57,382 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8402 | PR-AUC: 0.0012
+2026-05-26 03:43:57,383 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6591 | PR-AUC: 0.0011
+2026-05-26 03:44:16,367 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:45:14,742 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8522 | PR-AUC: 0.0016
+2026-05-26 03:45:14,742 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7143 | PR-AUC: 0.0014
+2026-05-26 03:45:32,743 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:46:29,856 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9006 | PR-AUC: 0.0024
+2026-05-26 03:46:29,856 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8237 | PR-AUC: 0.0023
+2026-05-26 03:46:52,164 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:47:48,995 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9036 | PR-AUC: 0.0030
+2026-05-26 03:47:48,996 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7933 | PR-AUC: 0.0018
+2026-05-26 03:48:06,772 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:49:07,930 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8985 | PR-AUC: 0.0024
+2026-05-26 03:49:07,931 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7818 | PR-AUC: 0.0018
+2026-05-26 03:49:28,204 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:50:27,566 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8930 | PR-AUC: 0.0019
+2026-05-26 03:50:27,566 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7241 | PR-AUC: 0.0014
+2026-05-26 03:50:46,619 [INFO ] Train F1: 0.0061 | Prec: 0.0625 | Rec: 0.0032
+2026-05-26 03:51:43,885 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8918 | PR-AUC: 0.0025
+2026-05-26 03:51:43,886 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7911 | PR-AUC: 0.0019
+2026-05-26 03:52:01,841 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:52:58,371 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9037 | PR-AUC: 0.0037
+2026-05-26 03:52:58,372 [INFO ] Test F1: 0.0027 | Prec: 0.3333 | Rec: 0.0014 | ROC-AUC: 0.7725 | PR-AUC: 0.0025
+2026-05-26 03:53:18,453 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:54:17,308 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9115 | PR-AUC: 0.0031
+2026-05-26 03:54:17,308 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8451 | PR-AUC: 0.0030
+2026-05-26 03:54:35,384 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:55:34,521 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9148 | PR-AUC: 0.0044
+2026-05-26 03:55:34,521 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7870 | PR-AUC: 0.0020
+2026-05-26 03:55:53,220 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:56:54,097 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8736 | PR-AUC: 0.0021
+2026-05-26 03:56:54,097 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6913 | PR-AUC: 0.0012
+2026-05-26 03:57:14,252 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:58:13,577 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8938 | PR-AUC: 0.0027
+2026-05-26 03:58:13,579 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7715 | PR-AUC: 0.0018
+2026-05-26 03:58:34,066 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 03:59:32,709 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8538 | PR-AUC: 0.0017
+2026-05-26 03:59:32,709 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7909 | PR-AUC: 0.0021
+2026-05-26 03:59:52,827 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:00:51,846 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8805 | PR-AUC: 0.0022
+2026-05-26 04:00:51,846 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7694 | PR-AUC: 0.0017
+2026-05-26 04:01:10,701 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:02:10,851 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8561 | PR-AUC: 0.0013
+2026-05-26 04:02:10,852 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7000 | PR-AUC: 0.0013
+2026-05-26 04:02:29,718 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:03:29,572 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8799 | PR-AUC: 0.0015
+2026-05-26 04:03:29,572 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7869 | PR-AUC: 0.0019
+2026-05-26 04:03:47,471 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:04:48,484 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8746 | PR-AUC: 0.0015
+2026-05-26 04:04:48,486 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7904 | PR-AUC: 0.0019
+2026-05-26 04:05:10,023 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:06:10,213 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8792 | PR-AUC: 0.0015
+2026-05-26 04:06:10,214 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7812 | PR-AUC: 0.0018
+2026-05-26 04:06:30,071 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:07:28,653 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7643 | PR-AUC: 0.0009
+2026-05-26 04:07:28,654 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6241 | PR-AUC: 0.0010
+2026-05-26 04:07:48,154 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:08:46,349 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8511 | PR-AUC: 0.0025
+2026-05-26 04:08:46,349 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6411 | PR-AUC: 0.0012
+2026-05-26 04:09:04,793 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:10:03,373 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8597 | PR-AUC: 0.0026
+2026-05-26 04:10:03,374 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7887 | PR-AUC: 0.0028
+2026-05-26 04:10:21,956 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:11:19,482 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8686 | PR-AUC: 0.0034
+2026-05-26 04:11:19,482 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8221 | PR-AUC: 0.0045
+2026-05-26 04:11:36,876 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:12:31,620 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8808 | PR-AUC: 0.0030
+2026-05-26 04:12:31,621 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7358 | PR-AUC: 0.0016
+2026-05-26 04:12:50,196 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:13:47,795 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9014 | PR-AUC: 0.0066
+2026-05-26 04:13:47,796 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8506 | PR-AUC: 0.0070
+2026-05-26 04:14:06,821 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:15:03,432 [INFO ] Validation F1: 0.0026 | Prec: 0.0023 | Rec: 0.0029 | ROC-AUC: 0.8800 | PR-AUC: 0.0023
+2026-05-26 04:15:03,432 [INFO ] Test F1: 0.0038 | Prec: 0.0065 | Rec: 0.0027 | ROC-AUC: 0.7609 | PR-AUC: 0.0018
+2026-05-26 04:15:20,926 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:16:17,430 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9029 | PR-AUC: 0.0032
+2026-05-26 04:16:17,431 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8009 | PR-AUC: 0.0025
+2026-05-26 04:16:34,870 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:17:29,782 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9024 | PR-AUC: 0.0036
+2026-05-26 04:17:29,782 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7646 | PR-AUC: 0.0018
+2026-05-26 04:17:47,587 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:18:42,670 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9084 | PR-AUC: 0.0039
+2026-05-26 04:18:42,670 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7528 | PR-AUC: 0.0020
+2026-05-26 04:19:00,694 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:19:56,185 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8798 | PR-AUC: 0.0020
+2026-05-26 04:19:56,185 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7409 | PR-AUC: 0.0015
+2026-05-26 04:20:14,127 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:21:09,523 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8860 | PR-AUC: 0.0022
+2026-05-26 04:21:09,523 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7665 | PR-AUC: 0.0016
+2026-05-26 04:21:27,369 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:22:24,006 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8868 | PR-AUC: 0.0024
+2026-05-26 04:22:24,006 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7815 | PR-AUC: 0.0019
+2026-05-26 04:22:41,372 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:23:37,814 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8713 | PR-AUC: 0.0017
+2026-05-26 04:23:37,814 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7844 | PR-AUC: 0.0020
+2026-05-26 04:23:55,346 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:24:51,291 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9150 | PR-AUC: 0.0044
+2026-05-26 04:24:51,292 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8244 | PR-AUC: 0.0038
+2026-05-26 04:25:09,259 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:26:05,398 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8570 | PR-AUC: 0.0015
+2026-05-26 04:26:05,398 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7506 | PR-AUC: 0.0016
+2026-05-26 04:26:22,798 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:27:19,086 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8873 | PR-AUC: 0.0026
+2026-05-26 04:27:19,086 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7595 | PR-AUC: 0.0017
+2026-05-26 04:27:36,913 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:28:32,307 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8655 | PR-AUC: 0.0015
+2026-05-26 04:28:32,307 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7251 | PR-AUC: 0.0015
+2026-05-26 04:28:50,176 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:29:45,703 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9048 | PR-AUC: 0.0036
+2026-05-26 04:29:45,704 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7763 | PR-AUC: 0.0018
+2026-05-26 04:30:03,027 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:30:58,549 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8522 | PR-AUC: 0.0014
+2026-05-26 04:30:58,550 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7103 | PR-AUC: 0.0013
+2026-05-26 04:31:16,602 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:32:13,402 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8168 | PR-AUC: 0.0012
+2026-05-26 04:32:13,402 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7531 | PR-AUC: 0.0017
+2026-05-26 04:32:31,318 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:33:26,640 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8618 | PR-AUC: 0.0018
+2026-05-26 04:33:26,640 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7309 | PR-AUC: 0.0015
+2026-05-26 04:33:44,336 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:34:40,679 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8922 | PR-AUC: 0.0030
+2026-05-26 04:34:40,679 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7950 | PR-AUC: 0.0023
+2026-05-26 04:34:58,089 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:35:53,721 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8510 | PR-AUC: 0.0015
+2026-05-26 04:35:53,721 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.6962 | PR-AUC: 0.0013
+2026-05-26 04:36:11,996 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:37:08,503 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8635 | PR-AUC: 0.0020
+2026-05-26 04:37:08,503 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7205 | PR-AUC: 0.0014
+2026-05-26 04:37:25,911 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:38:23,252 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8824 | PR-AUC: 0.0027
+2026-05-26 04:38:23,252 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7655 | PR-AUC: 0.0017
+2026-05-26 04:38:41,523 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:39:37,642 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8852 | PR-AUC: 0.0037
+2026-05-26 04:39:37,643 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7342 | PR-AUC: 0.0015
+2026-05-26 04:39:55,468 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:40:52,642 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8631 | PR-AUC: 0.0019
+2026-05-26 04:40:52,642 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7411 | PR-AUC: 0.0018
+2026-05-26 04:41:10,535 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:42:05,549 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8468 | PR-AUC: 0.0020
+2026-05-26 04:42:05,549 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7096 | PR-AUC: 0.0014
+2026-05-26 04:42:23,099 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:43:18,506 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8901 | PR-AUC: 0.0025
+2026-05-26 04:43:18,506 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7751 | PR-AUC: 0.0018
+2026-05-26 04:43:35,895 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:44:31,338 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9175 | PR-AUC: 0.0046
+2026-05-26 04:44:31,339 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8530 | PR-AUC: 0.0063
+2026-05-26 04:44:49,229 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:45:46,704 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9013 | PR-AUC: 0.0049
+2026-05-26 04:45:46,705 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7912 | PR-AUC: 0.0025
+2026-05-26 04:46:04,861 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:47:00,623 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8840 | PR-AUC: 0.0028
+2026-05-26 04:47:00,624 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7682 | PR-AUC: 0.0018
+2026-05-26 04:47:17,973 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:48:13,027 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8779 | PR-AUC: 0.0019
+2026-05-26 04:48:13,028 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7703 | PR-AUC: 0.0019
+2026-05-26 04:48:32,344 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:49:29,822 [INFO ] Validation F1: 0.0104 | Prec: 0.0556 | Rec: 0.0057 | ROC-AUC: 0.8939 | PR-AUC: 0.0049
+2026-05-26 04:49:29,822 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8130 | PR-AUC: 0.0025
+2026-05-26 04:49:47,494 [INFO ] Train F1: 0.0063 | Prec: 0.1429 | Rec: 0.0032
+2026-05-26 04:50:42,771 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9051 | PR-AUC: 0.0082
+2026-05-26 04:50:42,772 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8760 | PR-AUC: 0.0088
+2026-05-26 04:51:00,852 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:51:57,680 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8897 | PR-AUC: 0.0030
+2026-05-26 04:51:57,680 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7492 | PR-AUC: 0.0017
+2026-05-26 04:52:16,502 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:53:11,804 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8604 | PR-AUC: 0.0015
+2026-05-26 04:53:11,804 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7500 | PR-AUC: 0.0017
+2026-05-26 04:53:29,276 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:54:25,875 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8659 | PR-AUC: 0.0021
+2026-05-26 04:54:25,876 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7123 | PR-AUC: 0.0013
+2026-05-26 04:54:44,440 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:55:41,603 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8885 | PR-AUC: 0.0020
+2026-05-26 04:55:41,603 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7519 | PR-AUC: 0.0016
+2026-05-26 04:56:00,185 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:56:54,837 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8712 | PR-AUC: 0.0015
+2026-05-26 04:56:54,837 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7964 | PR-AUC: 0.0024
+2026-05-26 04:57:12,762 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:58:10,136 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8589 | PR-AUC: 0.0017
+2026-05-26 04:58:10,136 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7047 | PR-AUC: 0.0014
+2026-05-26 04:58:27,662 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 04:59:23,799 [INFO ] Validation F1: 0.0111 | Prec: 0.1818 | Rec: 0.0057 | ROC-AUC: 0.8954 | PR-AUC: 0.0056
+2026-05-26 04:59:23,799 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8004 | PR-AUC: 0.0025
+2026-05-26 04:59:41,025 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 05:00:36,007 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8659 | PR-AUC: 0.0020
+2026-05-26 05:00:36,007 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7373 | PR-AUC: 0.0016
+2026-05-26 05:00:53,413 [INFO ] Train F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000
+2026-05-26 05:01:50,916 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8697 | PR-AUC: 0.0026
+2026-05-26 05:01:50,917 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.7204 | PR-AUC: 0.0015
+2026-05-26 05:02:09,703 [INFO ] Train F1: 0.0061 | Prec: 0.0625 | Rec: 0.0032
+2026-05-26 05:03:04,624 [INFO ] Validation F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.9033 | PR-AUC: 0.0041
+2026-05-26 05:03:04,624 [INFO ] Test F1: 0.0000 | Prec: 0.0000 | Rec: 0.0000 | ROC-AUC: 0.8089 | PR-AUC: 0.0028

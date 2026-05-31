@@ -1,0 +1,21 @@
+tx_id,sender,receiver,amount,ts,channel
+OLD-1,Dormant_Dave,Retailer,50,2024-01-01T12:00:00,POS
+STR-0,Cash_Deposit_Point,Charlie Day,9240,2026-03-27T09:00:00,CASH
+CIRC-0,Alice Chen,Bob Smith,45000,2026-03-27T10:00:00,WIRE
+STR-1,Cash_Deposit_Point,Charlie Day,9221,2026-03-27T10:00:00,CASH
+CIRC-1,Bob Smith,Charlie Day,45000,2026-03-27T10:10:00,WIRE
+CIRC-2,Charlie Day,Alice Chen,45000,2026-03-27T10:20:00,WIRE
+STR-2,Cash_Deposit_Point,Charlie Day,9219,2026-03-27T11:00:00,CASH
+STR-3,Cash_Deposit_Point,Charlie Day,9247,2026-03-27T12:00:00,CASH
+STR-4,Cash_Deposit_Point,Charlie Day,9231,2026-03-27T13:00:00,CASH
+LAY-0,Global Logistics Ltd,Intermediate_1,98000,2026-03-27T14:00:00,INTERNAL
+STR-5,Cash_Deposit_Point,Charlie Day,9214,2026-03-27T14:00:00,CASH
+LAY-1,Intermediate_1,Intermediate_2,97900,2026-03-27T14:05:00,INTERNAL
+LAY-2,Intermediate_2,Target_Acc,97800,2026-03-27T14:10:00,INTERNAL
+STR-6,Cash_Deposit_Point,Charlie Day,9237,2026-03-27T15:00:00,CASH
+STR-7,Cash_Deposit_Point,Charlie Day,9240,2026-03-27T16:00:00,CASH
+SPIKE-1,Dormant_Dave,Shell Co Alpha,750000,2026-03-27T16:00:00,SWIFT
+STR-8,Cash_Deposit_Point,Charlie Day,9225,2026-03-27T17:00:00,CASH
+STR-9,Cash_Deposit_Point,Charlie Day,9214,2026-03-27T18:00:00,CASH
+STR-10,Cash_Deposit_Point,Charlie Day,9250,2026-03-27T19:00:00,CASH
+STR-11,Cash_Deposit_Point,Charlie Day,9224,2026-03-27T20:00:00,CASH

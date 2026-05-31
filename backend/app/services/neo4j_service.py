@@ -27,6 +27,7 @@ class Neo4jService:
 
     def __init__(self) -> None:
         self._driver = None
+        self.__async_driver = None  # lazy-created async driver
         self._use_neo4j = False
         self._graph: nx.DiGraph = nx.DiGraph()
         self._node_meta: Dict[str, Dict] = {}  # node_id → metadata
@@ -414,6 +415,19 @@ class Neo4jService:
         if score < settings.RISK_THRESHOLD_HIGH:
             return "high"
         return "critical"
+
+    @property
+    def _async_driver(self):
+        """Lazy-created async Neo4j driver (same credentials as sync driver)."""
+        if self.__async_driver is None and self._use_neo4j:
+            from neo4j import AsyncGraphDatabase
+            self.__async_driver = AsyncGraphDatabase.driver(
+                settings.NEO4J_URI,
+                auth=(settings.NEO4J_USER, settings.NEO4J_PASSWORD),
+                max_connection_lifetime=200,
+                keep_alive=True,
+            )
+        return self.__async_driver
 
     @property
     def is_connected(self) -> bool:

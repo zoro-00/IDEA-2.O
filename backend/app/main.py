@@ -50,14 +50,18 @@ def create_app() -> FastAPI:
     from app.api.routes.graph import router as graph_router
     from app.api.routes.copilot import router as copilot_router
     from app.api.routes.system import router as system_router
+    from app.api.routes.inference import router as inference_router
     from app.api.websocket_route import router as ws_router
+    from app.api.inference_ws import router as inference_ws_router
 
     app.include_router(score_router)
     app.include_router(alerts_router)
     app.include_router(graph_router)
     app.include_router(copilot_router)
     app.include_router(system_router)
+    app.include_router(inference_router)
     app.include_router(ws_router)
+    app.include_router(inference_ws_router)
 
     # ── Root endpoint ─────────────────────────────────────────
     @app.get("/")
@@ -96,17 +100,18 @@ def create_app() -> FastAPI:
         except Exception as e:
             logger.error("  └── ❌ FAILURE: Isolation Forest load raised exception: %s", e)
 
-        # 2. Load TGNN
-        logger.info("[2/5] Loading TGNN (GATe) Graph Intelligence Engine...")
-        from app.services.tgnn_service import tgnn_service
+        # 2. Load TGNN Inference (GATe + RuleEngine + Demo Scenario)
+        logger.info("[2/5] Loading TGNN Inference Engine (GATe + RuleEngine + Neo4j pipeline)...")
+        from app.services.tgnn_service import inference_service
         try:
-            tgnn_service.load()
-            if tgnn_service.is_loaded:
-                logger.info("  └── ✅ TGNN Engine loaded")
+            inference_service.load()
+            if inference_service.is_loaded:
+                n_tx = len(inference_service.SCENARIO["transactions"]) if inference_service.SCENARIO else 0
+                logger.info("  └── ✅ Inference Engine loaded (%d transactions precomputed)", n_tx)
             else:
-                logger.warning("  └── ⚠️ TGNN Engine not loaded; operating without graph NN inference")
+                logger.warning("  └── ⚠️ Inference Engine not loaded; torch/torch_geometric may not be installed")
         except Exception as e:
-            logger.error("  └── ❌ FAILURE: TGNN load raised exception: %s", e)
+            logger.error("  └── ❌ FAILURE: Inference Engine load raised exception: %s", e)
 
         # 3. Connect Neo4j
         logger.info("[3/5] Connecting to Graph Store (Neo4j/NetworkX)...")
@@ -132,14 +137,10 @@ def create_app() -> FastAPI:
         except Exception as e:
             logger.error("  └── ❌ FAILURE: Copilot load issue: %s", e)
 
-        # 5. Start Background Stream Loop
-        logger.info("[5/5] Starting Real-Time Transaction Stream Loop...")
+        # 5. Background Stream Loop (CSV Data to Global WebSockets)
+        logger.info("[5/5] Starting CSV-driven Global Transaction Stream Loop...")
         from app.websocket.stream_manager import transaction_stream_manager
-        try:
-            await transaction_stream_manager.start()
-            logger.info("  └── ✅ SUCCESS: Stream loop running (every %dms)", settings.STREAM_INTERVAL_MS)
-        except Exception as e:
-            logger.error("  └── ❌ FAILURE: Failed to start stream loop: %s", e)
+        asyncio.create_task(transaction_stream_manager.start())
 
         # Start WebSocket heartbeat
         from app.websocket.connection_manager import stream_manager
